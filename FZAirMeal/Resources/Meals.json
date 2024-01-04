@@ -1,0 +1,26 @@
+{
+    "errorMessage": "",
+    "meals": [
+        {
+            "id": "1",
+            "name": "Chicken Meal",
+            "details": "Grilled chicken with vegetables",
+            "quantity": 10,
+            "cost": 15.99
+        },
+        {
+            "id": "2",
+            "name": "Vegetarian Pasta",
+            "details": "Pasta with tomato sauce and vegetables",
+            "quantity": 8,
+            "cost": 12.99
+        },
+        {
+            "id": "3",
+            "name": "Salmon Steak",
+            "details": "Grilled salmon with lemon and herbs",
+            "quantity": 5,
+            "cost": 20.99
+        }
+    ]
+}
