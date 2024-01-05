@@ -4,8 +4,8 @@
 <dict>
 	<key>NSBonjourServices</key>
 	<array>
-		<string>_video-peer._tcp</string>
-		<string>_video-peer._udp</string>
+		<string>_air-meal._tcp</string>
+		<string>_air-meal._udp</string>
 	</array>
 	<key>UIApplicationSceneManifest</key>
 	<dict>

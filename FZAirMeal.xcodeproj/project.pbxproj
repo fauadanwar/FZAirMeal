@@ -57,7 +57,7 @@
 		188074A82B4728E60057B8A8 /* SegueIdentifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 188074A72B4728E60057B8A8 /* SegueIdentifier.swift */; };
 		188074AA2B4735B30057B8A8 /* MealViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 188074A92B4735B30057B8A8 /* MealViewModel.swift */; };
 		188074AC2B473F7C0057B8A8 /* PeerDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 188074AB2B473F7C0057B8A8 /* PeerDevice.swift */; };
-		188074AE2B473F8E0057B8A8 /* MultipeerConnectivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 188074AD2B473F8E0057B8A8 /* MultipeerConnectivity.swift */; };
+		188074AE2B473F8E0057B8A8 /* PermitionRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 188074AD2B473F8E0057B8A8 /* PermitionRequest.swift */; };
 		188074B02B4740CA0057B8A8 /* PairingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 188074AF2B4740CA0057B8A8 /* PairingTableViewCell.swift */; };
 /* End PBXBuildFile section */
 
@@ -133,7 +133,7 @@
 		188074A72B4728E60057B8A8 /* SegueIdentifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SegueIdentifier.swift; sourceTree = "<group>"; };
 		188074A92B4735B30057B8A8 /* MealViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MealViewModel.swift; sourceTree = "<group>"; };
 		188074AB2B473F7C0057B8A8 /* PeerDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeerDevice.swift; sourceTree = "<group>"; };
-		188074AD2B473F8E0057B8A8 /* MultipeerConnectivity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultipeerConnectivity.swift; sourceTree = "<group>"; };
+		188074AD2B473F8E0057B8A8 /* PermitionRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermitionRequest.swift; sourceTree = "<group>"; };
 		188074AF2B4740CA0057B8A8 /* PairingTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PairingTableViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -227,7 +227,7 @@
 				188074692B4574150057B8A8 /* Order.swift */,
 				188074902B460E820057B8A8 /* SlaveProperties.swift */,
 				188074AB2B473F7C0057B8A8 /* PeerDevice.swift */,
-				188074AD2B473F8E0057B8A8 /* MultipeerConnectivity.swift */,
+				188074AD2B473F8E0057B8A8 /* PermitionRequest.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -530,7 +530,7 @@
 				1880745B2B4571590057B8A8 /* MealRepositoryProtocol.swift in Sources */,
 				1880746E2B4576480057B8A8 /* MealCoreDataRepository.swift in Sources */,
 				1880741C2B454B6E0057B8A8 /* SceneDelegate.swift in Sources */,
-				188074AE2B473F8E0057B8A8 /* MultipeerConnectivity.swift in Sources */,
+				188074AE2B473F8E0057B8A8 /* PermitionRequest.swift in Sources */,
 				188074B02B4740CA0057B8A8 /* PairingTableViewCell.swift in Sources */,
 				188074AC2B473F7C0057B8A8 /* PeerDevice.swift in Sources */,
 				1880747E2B45A5F50057B8A8 /* BaseCoreDataRepository.swift in Sources */,

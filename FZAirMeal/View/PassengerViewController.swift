@@ -18,6 +18,7 @@ class PassengerViewController: UIViewController {
         return dataProvider
     }()
     private let passengerViewModel = PassengerViewModel()
+    var pairingViewModel: PairingViewModel?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -37,7 +38,7 @@ class PassengerViewController: UIViewController {
             let mealViewController = segue.destination as? MealViewController
             guard mealViewController != nil else { return }
             let passenger = passengerDataProvider.fetchedResultController.object(at: self.tblPassengerList.indexPathForSelectedRow!).convertToRecord()
-
+            mealViewController?.pairingViewModel = pairingViewModel
             mealViewController?.selectedPassenger = passenger
         }
     }

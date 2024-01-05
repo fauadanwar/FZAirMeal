@@ -20,7 +20,8 @@ class MealViewController: UIViewController {
     }()
     var selectedPassenger: Passenger? = nil
     private let mealViewModel = MealViewModel()
-
+    var pairingViewModel: PairingViewModel?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -40,6 +41,7 @@ class MealViewController: UIViewController {
             let order = Order(id: "\(UUID())", passenger: selectedPassenger, meal: meal, time: Date())
             if(mealViewModel.placeOrder(order: order))
             {
+                _ = pairingViewModel?.send(order: order) // User this response for ofline sync
                 displayAlert(message: "Order Placed")
             }
             else
@@ -90,7 +92,7 @@ extension MealViewController : UITableViewDelegate, UITableViewDataSource
         }
         if let cost = meal?.cost
         {
-            cell.lblQuantity.text = "\(cost)"
+            cell.lblCost.text = "\(cost)"
         }
         cell.lblDetails.text = meal?.details
         cell.lblCostTitle.text = "Cost:"

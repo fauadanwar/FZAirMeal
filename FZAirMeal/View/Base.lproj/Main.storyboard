@@ -76,12 +76,19 @@
                     </view>
                     <navigationItem key="navigationItem" title="Pair" id="Kve-LF-t2d">
                         <barButtonItem key="rightBarButtonItem" style="done" id="Nzn-ca-ViX">
-                            <switch key="customView" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" id="gQk-ew-e8N">
+                            <switch key="customView" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" id="gQk-ew-e8N">
                                 <rect key="frame" x="326" y="6.6666666666666679" width="51" height="31.000000000000004"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <connections>
+                                    <action selector="switchPairingValueChange:" destination="BYZ-38-t0r" eventType="valueChanged" id="Jvp-pK-gFE"/>
+                                </connections>
                             </switch>
                         </barButtonItem>
                     </navigationItem>
+                    <connections>
+                        <outlet property="switchPairing" destination="gQk-ew-e8N" id="uLI-h5-peM"/>
+                        <outlet property="tblPeersList" destination="RtZ-hK-CZI" id="6ls-kM-fGo"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
