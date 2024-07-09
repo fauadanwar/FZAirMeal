@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="22758" systemVersion="23F79" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="CDMeal" representedClassName="CDMeal" syncable="YES" codeGenerationType="class">
+        <attribute name="cost" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="details" optional="YES" attributeType="String"/>
+        <attribute name="id" attributeType="String"/>
+        <attribute name="name" attributeType="String"/>
+        <attribute name="quantity" attributeType="Integer 16" minValueString="0" defaultValueString="0" usesScalarValueType="YES"/>
+        <relationship name="toOrder" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="CDOrder" inverseName="toMeal" inverseEntity="CDOrder"/>
+        <uniquenessConstraints>
+            <uniquenessConstraint>
+                <constraint value="id"/>
+            </uniquenessConstraint>
+        </uniquenessConstraints>
+    </entity>
+    <entity name="CDOrder" representedClassName="CDOrder" syncable="YES" codeGenerationType="class">
+        <attribute name="id" attributeType="String"/>
+        <attribute name="time" attributeType="Date" usesScalarValueType="NO"/>
+        <relationship name="toMeal" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CDMeal" inverseName="toOrder" inverseEntity="CDMeal"/>
+        <relationship name="toPassenger" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CDPassenger" inverseName="toOrder" inverseEntity="CDPassenger"/>
+        <uniquenessConstraints>
+            <uniquenessConstraint>
+                <constraint value="id"/>
+            </uniquenessConstraint>
+        </uniquenessConstraints>
+    </entity>
+    <entity name="CDPassenger" representedClassName="CDPassenger" syncable="YES" codeGenerationType="class">
+        <attribute name="id" attributeType="String"/>
+        <attribute name="name" attributeType="String"/>
+        <attribute name="seatNumber" attributeType="String"/>
+        <relationship name="toOrder" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="CDOrder" inverseName="toPassenger" inverseEntity="CDOrder"/>
+        <uniquenessConstraints>
+            <uniquenessConstraint>
+                <constraint value="id"/>
+            </uniquenessConstraint>
+        </uniquenessConstraints>
+    </entity>
+</model>
