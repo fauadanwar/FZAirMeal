@@ -24,5 +24,12 @@ class PassengerTableViewCell: UITableViewCell {
 
         // Configure the view for the selected state
     }
-
+    
+    func confiureCell(passenger: Passenger?, meal: Meal?)
+    {
+        lblMaelTitle.text = "Meal:"
+        lblMealName.text = meal?.name ?? "No Order"
+        lblName.text = passenger?.name
+        lblSeatNumber.text = passenger?.seatNumber
+    }
 }

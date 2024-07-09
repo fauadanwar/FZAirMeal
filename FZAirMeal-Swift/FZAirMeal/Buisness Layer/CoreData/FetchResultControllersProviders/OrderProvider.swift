@@ -8,32 +8,9 @@
 import Foundation
 import CoreData
 
-class OrderProvider
-{
-    private weak var fetchedResultControllerDelegate: NSFetchedResultsControllerDelegate?
-
-    init(With fetchedResultControllerDelegate: NSFetchedResultsControllerDelegate)
-    {
-        self.fetchedResultControllerDelegate = fetchedResultControllerDelegate
+// Usage example for other entities
+class OrderProvider: CoreDataProvider<CDOrder> {
+    init(delegate: NSFetchedResultsControllerDelegate) {
+        super.init(with: delegate)
     }
-
-    lazy var fetchedResultController: NSFetchedResultsController<CDOrder> =
-        {
-            let fetchRequest: NSFetchRequest<CDOrder> = CDOrder.fetchRequest()
-            fetchRequest.fetchBatchSize = 20
-            fetchRequest.sortDescriptors = [NSSortDescriptor(key: "id", ascending: true)]
-
-            let controller = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: PersistentStorage.shared.context, sectionNameKeyPath: nil, cacheName: nil)
-
-            controller.delegate = fetchedResultControllerDelegate
-
-            do{
-                 try controller.performFetch()
-            } catch{
-                debugPrint(error)
-            }
-
-            return controller
-    }()
-
 }

@@ -17,35 +17,40 @@ struct MealDataManager {
         self._mealResourceRepository = _mealResourceRepository
     }
     
-    func getMealRecordForPeer(completionHandler:@escaping(_ result: Array<Meal>?)-> Void) {
-        completionHandler(nil)
-    }
-    
-    func getMealRecordForHost(completionHandler:@escaping(_ result: Array<Meal>?)-> Void) {
+    func getMealRecord(completionHandler:@escaping(_ result: Array<Meal>?)-> Void) {
         let response = _cdMealDataRepository.getAll()
         if(response.count != 0) {
             // return response to the view controller
             completionHandler(response)
         }
-        else {
-            // get data from api
-            _mealResourceRepository.getRecordsFromAPI { apiResponse in
-                if(apiResponse != nil && apiResponse?.count != 0){
-                    // insert record in core data
-                    _ = _cdMealDataRepository.batchInsertMealRecords(records: apiResponse!)
-                    completionHandler(apiResponse)
-                }
-                else {
-                    // get data from file
-                    _mealResourceRepository.getRecords { apiResponse in
-                        if(apiResponse != nil && apiResponse?.count != 0){
-                            // insert record in core data
-                            _ = _cdMealDataRepository.batchInsertMealRecords(records: apiResponse!)
-                            completionHandler(apiResponse)
-                        }
-                        else {
-                            completionHandler(nil)
-                        }
+        else
+        {
+            completionHandler(nil)
+        }
+    }
+    
+    func getMealRecordForPeer(completionHandler:@escaping(_ result: Array<Meal>?)-> Void) {
+        completionHandler(nil)
+    }
+    
+    func getMealRecordForHost(completionHandler:@escaping(_ result: Array<Meal>?)-> Void) {
+        // get data from api
+        _mealResourceRepository.getRecordsFromAPI { apiResponse in
+            if(apiResponse != nil && apiResponse?.count != 0){
+                // insert record in core data
+                _ = _cdMealDataRepository.batchInsertMealRecords(records: apiResponse!)
+                completionHandler(apiResponse)
+            }
+            else {
+                // get data from file
+                _mealResourceRepository.getRecords { apiResponse in
+                    if(apiResponse != nil && apiResponse?.count != 0){
+                        // insert record in core data
+                        _ = _cdMealDataRepository.batchInsertMealRecords(records: apiResponse!)
+                        completionHandler(apiResponse)
+                    }
+                    else {
+                        completionHandler(nil)
                     }
                 }
             }

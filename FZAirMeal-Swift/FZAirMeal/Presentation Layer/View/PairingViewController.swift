@@ -16,6 +16,7 @@ class PairingViewController: UIViewController {
     @IBOutlet weak var syncMealButton: UIButton!
     @IBOutlet weak var syncPassengerButton: UIButton!
     @IBOutlet weak var syncOrderButton: UIButton!
+    @IBOutlet weak var clearAllDataButton: UIButton!
     @IBOutlet weak var buttonStackView: UIStackView!
     @IBOutlet weak var buttonsParentStackView: UIStackView!
     @IBOutlet weak var tableViewLabel: UILabel!
@@ -25,13 +26,6 @@ class PairingViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        //This is bad approch doing this to save time
-        if let passengerViewNavigationController = self.tabBarController?.viewControllers?[1] as? UINavigationController,
-           let passengerViewController = passengerViewNavigationController.topViewController as? PassengerViewController
-        {
-            passengerViewController.pairingViewModel = pairingViewModel
-        }
         
         pairingViewModel.$pairingRole
             .receive(on: DispatchQueue.main)
@@ -42,10 +36,12 @@ class PairingViewController: UIViewController {
                     self.title = "Host"
                     tableViewLabel.text = "Peers"
                     buttonsParentStackView.isHidden = false
+                    syncOrderButton.isHidden = true
                 case .peer:
                     self.title = "Peer"
                     tableViewLabel.text = "Hosts"
                     buttonsParentStackView.isHidden = false
+                    syncOrderButton.isHidden = false
                 case .unknown:
                     self.title = "Unknown"
                     buttonsParentStackView.isHidden = true
@@ -134,16 +130,8 @@ class PairingViewController: UIViewController {
        }
 
        // Clear data actions
-       @IBAction func clearOrdersTapped(_ sender: UIButton) {
-           pairingViewModel.clearData(ofType: .orders)
-       }
-
-       @IBAction func clearPassengersTapped(_ sender: UIButton) {
-           pairingViewModel.clearData(ofType: .passengers)
-       }
-
-       @IBAction func clearMealsTapped(_ sender: UIButton) {
-           pairingViewModel.clearData(ofType: .meals)
+       @IBAction func clearAllDataTapped(_ sender: UIButton) {
+           pairingViewModel.clearAllData()
        }
     
     /*

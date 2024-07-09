@@ -63,6 +63,7 @@
 		A07D409E2C3ABB890058B04A /* PeerPairingRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = A07D409D2C3ABB890058B04A /* PeerPairingRepository.swift */; };
 		A07D40A02C3AC7190058B04A /* PeerPairingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A07D409F2C3AC7190058B04A /* PeerPairingManager.swift */; };
 		A07D40A22C3ACA310058B04A /* PairingDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = A07D40A12C3ACA310058B04A /* PairingDevice.swift */; };
+		A0E7B7492C3D6AD500EB1290 /* CoreDataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0E7B7482C3D6AD400EB1290 /* CoreDataProvider.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -143,6 +144,7 @@
 		A07D409D2C3ABB890058B04A /* PeerPairingRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeerPairingRepository.swift; sourceTree = "<group>"; };
 		A07D409F2C3AC7190058B04A /* PeerPairingManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeerPairingManager.swift; sourceTree = "<group>"; };
 		A07D40A12C3ACA310058B04A /* PairingDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PairingDevice.swift; sourceTree = "<group>"; };
+		A0E7B7482C3D6AD400EB1290 /* CoreDataProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataProvider.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -236,9 +238,9 @@
 			isa = PBXGroup;
 			children = (
 				188074962B46DA480057B8A8 /* PassengerViewModel.swift */,
+				188074A92B4735B30057B8A8 /* MealViewModel.swift */,
 				188074982B46DA590057B8A8 /* OrderViewModel.swift */,
 				1880749A2B46DA680057B8A8 /* PairingViewModel.swift */,
-				188074A92B4735B30057B8A8 /* MealViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -249,8 +251,8 @@
 				1880741F2B454B6E0057B8A8 /* Main.storyboard */,
 				188074922B46DA1E0057B8A8 /* PairingViewController.swift */,
 				1880741D2B454B6E0057B8A8 /* PassengerViewController.swift */,
-				188074942B46DA2C0057B8A8 /* OrderViewController.swift */,
 				188074A52B47005C0057B8A8 /* MealViewController.swift */,
+				188074942B46DA2C0057B8A8 /* OrderViewController.swift */,
 				1880749E2B46F8C10057B8A8 /* TableViewCell */,
 			);
 			path = View;
@@ -259,8 +261,8 @@
 		188074522B4569220057B8A8 /* Manager */ = {
 			isa = PBXGroup;
 			children = (
-				188074532B4569420057B8A8 /* MealDataManager.swift */,
 				188074812B45C4B20057B8A8 /* PassengerDataManager.swift */,
+				188074532B4569420057B8A8 /* MealDataManager.swift */,
 				188074872B45C8970057B8A8 /* OrderDataManager.swift */,
 				A07D40942C383BA60058B04A /* HostPairingManager.swift */,
 				A07D409F2C3AC7190058B04A /* PeerPairingManager.swift */,
@@ -343,6 +345,7 @@
 		1880748D2B45F6400057B8A8 /* FetchResultControllersProviders */ = {
 			isa = PBXGroup;
 			children = (
+				A0E7B7482C3D6AD400EB1290 /* CoreDataProvider.swift */,
 				1880748B2B45F63A0057B8A8 /* PassengerProvider.swift */,
 				1880748E2B45F6D50057B8A8 /* MealProvider.swift */,
 				188074A12B46FF3B0057B8A8 /* OrderProvider.swift */,
@@ -354,8 +357,8 @@
 			isa = PBXGroup;
 			children = (
 				1880749C2B46F8BC0057B8A8 /* PassengerTableViewCell.swift */,
-				1880749F2B46F9250057B8A8 /* OrderTableViewCell.swift */,
 				188074A32B4700450057B8A8 /* MealTableViewCell.swift */,
+				1880749F2B46F9250057B8A8 /* OrderTableViewCell.swift */,
 				188074AF2B4740CA0057B8A8 /* PairingTableViewCell.swift */,
 			);
 			path = TableViewCell;
@@ -563,6 +566,7 @@
 				188074662B4572C10057B8A8 /* PersistentStorage.swift in Sources */,
 				1880746A2B4574150057B8A8 /* Order.swift in Sources */,
 				A0391E5C2C32CE6B001EBBC5 /* BaseFileResourceRepositoryProtocol.swift in Sources */,
+				A0E7B7492C3D6AD500EB1290 /* CoreDataProvider.swift in Sources */,
 				188074992B46DA590057B8A8 /* OrderViewModel.swift in Sources */,
 				A07D409C2C3AB76B0058B04A /* SendDataType.swift in Sources */,
 				A0391E602C32F4D6001EBBC5 /* MealResourceRepository.swift in Sources */,

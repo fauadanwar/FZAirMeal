@@ -15,7 +15,7 @@ class OrderViewController: UIViewController {
     private let refreshControl = UIRefreshControl()
     lazy var orderDataProvider: OrderProvider =
     {
-        let dataProvider = OrderProvider(With: self)
+        let dataProvider = OrderProvider(delegate: self)
         return dataProvider
     }()
     private let orderViewModel = OrderViewModel()
@@ -34,14 +34,14 @@ extension OrderViewController : UITableViewDelegate, UITableViewDataSource
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        orderDataProvider.fetchedResultController.fetchedObjects?.count ?? 0
+        orderDataProvider.fetchedResultsController.fetchedObjects?.count ?? 0
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
         let cell = tableView.dequeueReusableCell(withIdentifier: "OrderCell") as! OrderTableViewCell
         
-        let cdOrder = orderDataProvider.fetchedResultController.object(at: indexPath)
+        let cdOrder = orderDataProvider.fetchedResultsController.object(at: indexPath)
         let order = cdOrder.convertToRecord()
         let meal = cdOrder.toMeal?.convertToRecord()
         let passenger = cdOrder.toPassenger?.convertToRecord()

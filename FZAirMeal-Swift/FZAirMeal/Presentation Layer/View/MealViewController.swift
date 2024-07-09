@@ -15,7 +15,7 @@ class MealViewController: UIViewController {
 
     lazy var mealDataProvider: MealProvider =
     {
-        let dataProvider = MealProvider(With: self)
+        let dataProvider = MealProvider(delegate: self)
         return dataProvider
     }()
     var selectedPassenger: Passenger? = nil
@@ -35,7 +35,7 @@ class MealViewController: UIViewController {
     @IBAction func placeOrderButtonTapped(_ sender: Any) {
         
         if let selectedRow = self.tblMealList.indexPathForSelectedRow,
-           let meal = mealDataProvider.fetchedResultController.object(at: selectedRow).convertToRecord(),
+           let meal = mealDataProvider.fetchedResultsController.object(at: selectedRow).convertToRecord(),
            let selectedPassenger
         {
             let order = Order(id: "\(UUID())", passengerId: selectedPassenger.id, mealId: meal.id, time: Date())
@@ -76,14 +76,14 @@ extension MealViewController : UITableViewDelegate, UITableViewDataSource
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        mealDataProvider.fetchedResultController.fetchedObjects?.count ?? 0
+        mealDataProvider.fetchedResultsController.fetchedObjects?.count ?? 0
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
         let cell = tableView.dequeueReusableCell(withIdentifier: "MealCell") as! MealTableViewCell
 
-        let meal = mealDataProvider.fetchedResultController.object(at: indexPath).convertToRecord()
+        let meal = mealDataProvider.fetchedResultsController.object(at: indexPath).convertToRecord()
         cell.lblName.text = meal?.name
         cell.lblQuantityTitle.text = "Meals Left:"
         if let quantity = meal?.quantity

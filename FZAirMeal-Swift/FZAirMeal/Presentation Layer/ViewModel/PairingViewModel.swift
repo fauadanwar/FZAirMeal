@@ -109,12 +109,6 @@ class PairingViewModel: NSObject, ObservableObject
         switch pairingRole {
         case .host:
             switch type {
-            case .orders:
-                orderDataManager.getOrderRecordForHost { [weak self] result in
-                    guard let self else { return }
-                    print(result ?? "empty Order")
-                    ifFetchingData = false
-                }
             case .passengers:
                 passengerManager.getPassengerRecordForHost { [weak self] result in
                     guard let self else { return }
@@ -127,6 +121,8 @@ class PairingViewModel: NSObject, ObservableObject
                     print(result ?? "empty meals")
                     ifFetchingData = false
                 }
+            default:
+                print("Host dose not require to fetch order data")
             }
         case .peer:
             switch type {
@@ -154,14 +150,7 @@ class PairingViewModel: NSObject, ObservableObject
         }
     }
     
-    func clearData(ofType type: SendDataType) {
-        switch type {
-        case .orders:
-            orderDataManager.resetCoreData()
-        case .passengers:
-            passengerManager.resetCoreData()
-        case .meals:
-            mealManager.resetCoreData()
-        }
+    func clearAllData() {
+        orderDataManager.resetCoreData()
     }
 }

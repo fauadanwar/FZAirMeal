@@ -17,7 +17,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView hidden="YES" opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="ydl-Ag-yaA">
-                                <rect key="frame" x="10" y="102.99999999999999" width="373" height="210.66666666666663"/>
+                                <rect key="frame" x="10" y="103.00000000000001" width="373" height="180.33333333333337"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="UCU-ZC-ubS">
                                         <rect key="frame" x="0.0" y="0.0" width="373" height="31"/>
@@ -37,7 +37,7 @@
                                         </subviews>
                                     </stackView>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="jad-EH-hhy">
-                                        <rect key="frame" x="0.0" y="41" width="373" height="169.66666666666666"/>
+                                        <rect key="frame" x="0.0" y="41" width="373" height="139.33333333333334"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Fetch Data" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="R0l-TN-slW">
                                                 <rect key="frame" x="0.0" y="0.0" width="373" height="20.333333333333332"/>
@@ -74,43 +74,16 @@
                                                     </button>
                                                 </subviews>
                                             </stackView>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Clear Data" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Bgo-VF-eCQ">
-                                                <rect key="frame" x="0.0" y="74.666666666666657" width="373" height="20.333333333333329"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                <nil key="textColor"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
-                                            <stackView opaque="NO" contentMode="scaleToFill" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="ATN-EB-fcQ">
-                                                <rect key="frame" x="0.0" y="105" width="373" height="34.333333333333343"/>
-                                                <subviews>
-                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="j8x-9u-hOh">
-                                                        <rect key="frame" x="0.0" y="0.0" width="117.66666666666667" height="34.333333333333336"/>
-                                                        <state key="normal" title="Button"/>
-                                                        <buttonConfiguration key="configuration" style="tinted" title="Passenger"/>
-                                                        <connections>
-                                                            <action selector="clearPassengersTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="8Nu-H6-mRV"/>
-                                                        </connections>
-                                                    </button>
-                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jqQ-To-1Dh">
-                                                        <rect key="frame" x="127.66666666666666" y="0.0" width="117.66666666666666" height="34.333333333333336"/>
-                                                        <state key="normal" title="Button"/>
-                                                        <buttonConfiguration key="configuration" style="tinted" title="Meal"/>
-                                                        <connections>
-                                                            <action selector="clearMealsTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="fPt-p9-HxX"/>
-                                                        </connections>
-                                                    </button>
-                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Tsr-K2-3Gt">
-                                                        <rect key="frame" x="255.33333333333329" y="0.0" width="117.66666666666666" height="34.333333333333336"/>
-                                                        <state key="normal" title="Button"/>
-                                                        <buttonConfiguration key="configuration" style="tinted" title="Order"/>
-                                                        <connections>
-                                                            <action selector="clearOrdersTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="kEG-IX-ZUa"/>
-                                                        </connections>
-                                                    </button>
-                                                </subviews>
-                                            </stackView>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="j8x-9u-hOh">
+                                                <rect key="frame" x="0.0" y="74.666666666666657" width="373" height="34.333333333333343"/>
+                                                <state key="normal" title="Button"/>
+                                                <buttonConfiguration key="configuration" style="tinted" title="Clear all data"/>
+                                                <connections>
+                                                    <action selector="clearAllDataTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="MFU-dD-Sp4"/>
+                                                </connections>
+                                            </button>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Peers" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jat-Y1-XU7">
-                                                <rect key="frame" x="0.0" y="149.33333333333331" width="373" height="20.333333333333343"/>
+                                                <rect key="frame" x="0.0" y="118.99999999999999" width="373" height="20.333333333333329"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
@@ -120,7 +93,7 @@
                                 </subviews>
                             </stackView>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="RtZ-hK-CZI">
-                                <rect key="frame" x="0.0" y="313.66666666666674" width="393" height="455.33333333333326"/>
+                                <rect key="frame" x="0.0" y="283.33333333333326" width="393" height="485.66666666666674"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="PeerCell" id="FOq-mf-gFY" customClass="PairingTableViewCell" customModule="FZAirMeal" customModuleProvider="target">
@@ -148,6 +121,7 @@
                                                 </label>
                                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="circle.dotted.circle.fill" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="MUU-xO-KSr">
                                                     <rect key="frame" x="348" y="20.333333333333329" width="35" height="33.666666666666671"/>
+                                                    <color key="tintColor" systemColor="systemRedColor"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="35" id="JvH-AN-OBB"/>
                                                         <constraint firstAttribute="width" constant="35" id="kOa-Iy-a1g"/>
@@ -202,10 +176,11 @@
                         <outlet property="activityButton" destination="AsZ-bW-ph1" id="2yM-2q-Svm"/>
                         <outlet property="buttonStackView" destination="jad-EH-hhy" id="FAc-3z-4sZ"/>
                         <outlet property="buttonsParentStackView" destination="ydl-Ag-yaA" id="e8b-Tc-zcf"/>
+                        <outlet property="clearAllDataButton" destination="j8x-9u-hOh" id="QGU-DI-x3X"/>
                         <outlet property="switchPairing" destination="S2Y-zJ-D1q" id="sXe-ps-13E"/>
-                        <outlet property="syncMealButton" destination="x5o-ju-qhe" id="jVx-WS-gej"/>
-                        <outlet property="syncOrderButton" destination="YL4-FZ-sIt" id="ko5-yd-FI7"/>
-                        <outlet property="syncPassengerButton" destination="dJA-gU-t1K" id="jao-WK-4fA"/>
+                        <outlet property="syncMealButton" destination="YL4-FZ-sIt" id="v8J-II-Odr"/>
+                        <outlet property="syncOrderButton" destination="dJA-gU-t1K" id="uU5-bE-pDc"/>
+                        <outlet property="syncPassengerButton" destination="x5o-ju-qhe" id="q2x-l5-3PZ"/>
                         <outlet property="tableViewLabel" destination="jat-Y1-XU7" id="sQs-qP-wbp"/>
                         <outlet property="tblPeersList" destination="RtZ-hK-CZI" id="6ls-kM-fGo"/>
                     </connections>
@@ -642,6 +617,9 @@
         </systemColor>
         <systemColor name="systemIndigoColor">
             <color red="0.34509803921568627" green="0.33725490196078434" blue="0.83921568627450982" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+        <systemColor name="systemRedColor">
+            <color red="1" green="0.23137254901960785" blue="0.18823529411764706" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

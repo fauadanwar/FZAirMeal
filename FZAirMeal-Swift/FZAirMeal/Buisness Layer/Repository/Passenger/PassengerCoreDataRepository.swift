@@ -11,11 +11,27 @@ import CoreData
 protocol PassengerCoreDataRepositoryProtocol: BaseCoreDataRepositoryProtocol where T == Passenger {
     func insertPassengerRecords(records:Array<Passenger>) -> Bool
     func batchInsertPassengerRecords(records:Array<Passenger>) -> Bool
+    func getPassengersAt(indexPath: IndexPath) -> Passenger?
+    func getPassengerAndMealAt(indexPath: IndexPath) ->  (Passenger?, Meal?)
+    func getPassengerCount() -> Int
 }
 
-struct PassengerCoreDataRepository : PassengerCoreDataRepositoryProtocol {
+protocol PassengerCoreDataRepositoryDelegate: AnyObject
+{
+    func passengerDataUpdated()
+}
+
+class PassengerCoreDataRepository : NSObject, PassengerCoreDataRepositoryProtocol {
     typealias T = Passenger
     typealias CDT = CDPassenger
+    weak var passengerCoreDataRepositoryDelegate: PassengerCoreDataRepositoryDelegate?
+    
+    lazy var passengerDataProvider: PassengerProvider =
+    {
+        PersistentStorage.shared.printDocumentDirectoryPath()
+        let dataProvider = PassengerProvider(delegate: self)
+        return dataProvider
+    }()
     
     func batchInsertPassengerRecords(records: Array<Passenger>) -> Bool {
 
@@ -80,6 +96,20 @@ struct PassengerCoreDataRepository : PassengerCoreDataRepositoryProtocol {
         return true
     }
     
+    func getPassengersAt(indexPath: IndexPath) -> Passenger? {
+        let cdPassenger = passengerDataProvider.fetchedResultsController.object(at: indexPath)
+        return cdPassenger.convertToRecord()
+    }
+    
+    func getPassengerAndMealAt(indexPath: IndexPath) ->  (Passenger?, Meal?) {
+        let cdPassenger = passengerDataProvider.fetchedResultsController.object(at: indexPath)
+        return (cdPassenger.convertToRecord(), cdPassenger.toOrder?.toMeal?.convertToRecord())
+    }
+    
+    func getPassengerCount() -> Int {
+        passengerDataProvider.fetchedResultsController.fetchedObjects?.count ?? 0
+    }
+    
     func updateProperties(record: Passenger, cdRecord: CDPassenger) {
         cdRecord.name = record.name
         cdRecord.seatNumber = record.seatNumber
@@ -90,5 +120,12 @@ struct PassengerCoreDataRepository : PassengerCoreDataRepositoryProtocol {
         cdRecord.name = record.name
         cdRecord.seatNumber = record.seatNumber
         cdRecord.toOrder = nil
+    }
+}
+
+extension PassengerCoreDataRepository : NSFetchedResultsControllerDelegate
+{
+    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        passengerCoreDataRepositoryDelegate?.passengerDataUpdated()
     }
 }

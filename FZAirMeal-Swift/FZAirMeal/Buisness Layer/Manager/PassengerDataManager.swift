@@ -6,10 +6,17 @@
 //
 
 import Foundation
-struct PassengerDataManager {
+
+protocol PassengerDataManagerDelegate: AnyObject
+{
+    func passengerDataUpdated()
+}
+
+class PassengerDataManager {
 
     private let _cdPassengerDataRepository : any PassengerCoreDataRepositoryProtocol
     private let _passengerResourceRepository: any PassengerResourceRepositoryProtocol
+    weak var passengerDataManagerDelegate: PassengerDataManagerDelegate?
     
     init(_cdPassengerDataRepository: any PassengerCoreDataRepositoryProtocol = PassengerCoreDataRepository(),
          _passengerResourceRepository: any PassengerResourceRepositoryProtocol = PassengerResourceRepository())
@@ -18,31 +25,37 @@ struct PassengerDataManager {
         self._passengerResourceRepository = _passengerResourceRepository
     }
 
-    func getPassengerRecordForHost(completionHandler:@escaping(_ result: Array<Passenger>?)-> Void) {
+    func getPassengerRecord(completionHandler:@escaping(_ result: Array<Passenger>?)-> Void) {
         let response = _cdPassengerDataRepository.getAll()
         if(response.count != 0) {
             // return response to the view controller
             completionHandler(response)
         }
         else {
-            // get data from api
-            _passengerResourceRepository.getRecordsFromAPI { apiResponse in
-                if(apiResponse != nil && apiResponse?.count != 0){
-                    // insert record in core data
-                    _ = _cdPassengerDataRepository.batchInsertPassengerRecords(records: apiResponse!)
-                    completionHandler(apiResponse)
-                }
-                else {
-                    // get data from file
-                    _passengerResourceRepository.getRecords { apiResponse in
-                        if(apiResponse != nil && apiResponse?.count != 0){
-                            // insert record in core data
-                            _ = _cdPassengerDataRepository.batchInsertPassengerRecords(records: apiResponse!)
-                            completionHandler(apiResponse)
-                        }
-                        else {
-                            completionHandler(nil)
-                        }
+            completionHandler(nil)
+        }
+    }
+    
+    func getPassengerRecordForHost(completionHandler:@escaping(_ result: Array<Passenger>?)-> Void) {
+        // get data from api
+        _passengerResourceRepository.getRecordsFromAPI { [weak self] apiResponse in
+            guard let self else { return }
+            if(apiResponse != nil && apiResponse?.count != 0){
+                // insert record in core data
+                _ = _cdPassengerDataRepository.batchInsertPassengerRecords(records: apiResponse!)
+                completionHandler(apiResponse)
+            }
+            else {
+                // get data from file
+                _passengerResourceRepository.getRecords { [weak self] apiResponse in
+                    guard let self else { return }
+                    if(apiResponse != nil && apiResponse?.count != 0){
+                        // insert record in core data
+                        _ = _cdPassengerDataRepository.batchInsertPassengerRecords(records: apiResponse!)
+                        completionHandler(apiResponse)
+                    }
+                    else {
+                        completionHandler(nil)
                     }
                 }
             }
@@ -53,6 +66,17 @@ struct PassengerDataManager {
         completionHandler(nil)
     }
     
+    func getPassengersAt(indexPath: IndexPath) -> Passenger? {
+        return _cdPassengerDataRepository.getPassengersAt(indexPath: indexPath)
+    }
+    
+    func getPassengerAndMealAt(indexPath: IndexPath) -> (Passenger?, Meal?) {
+        return _cdPassengerDataRepository.getPassengerAndMealAt(indexPath: indexPath)
+    }
+    
+    func getPassengerCount() -> Int {
+        return _cdPassengerDataRepository.getPassengerCount()
+    }
     
     func deletePassenger(byIdentifier id: String) -> Bool
     {
@@ -67,5 +91,12 @@ struct PassengerDataManager {
     func resetCoreData()
     {
         return _cdPassengerDataRepository.resetCoreData()
+    }
+}
+
+extension PassengerDataManager : PassengerCoreDataRepositoryDelegate
+{
+    func passengerDataUpdated() {
+        passengerDataManagerDelegate?.passengerDataUpdated()
     }
 }

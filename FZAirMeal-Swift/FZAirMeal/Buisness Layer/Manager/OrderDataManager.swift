@@ -36,8 +36,17 @@ struct OrderDataManager
         completionHandler(nil)
     }
     
-    func getOrderRecordForHost(completionHandler:@escaping(_ result: Array<Order>?)-> Void) {
-        completionHandler(nil)
+    
+    func getOrderRecord(completionHandler:@escaping(_ result: Array<Order>?)-> Void) {
+        let response = _cdOrderRepository.getAll()
+        if(response.count != 0) {
+            // return response to the view controller
+            completionHandler(response)
+        }
+        else
+        {
+            completionHandler(nil)
+        }
     }
 }
 

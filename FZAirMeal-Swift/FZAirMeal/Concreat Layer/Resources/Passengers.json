@@ -2,101 +2,101 @@
     {
         "id": "1",
         "name": "John Doe",
-        "seatNo": "12A"
+        "seatNumber": "12A"
     },
     {
         "id": "2",
         "name": "Jane Smith",
-        "seatNo": "14B"
+        "seatNumber": "14B"
     },
     {
         "id": "3",
         "name": "Alice Johnson",
-        "seatNo": "10C"
+        "seatNumber": "10C"
     },
     {
         "id": "4",
         "name": "Bob Brown",
-        "seatNo": "15D"
+        "seatNumber": "15D"
     },
     {
         "id": "5",
         "name": "Charlie Davis",
-        "seatNo": "13E"
+        "seatNumber": "13E"
     },
     {
         "id": "6",
         "name": "Diana Evans",
-        "seatNo": "9F"
+        "seatNumber": "9F"
     },
     {
         "id": "7",
         "name": "Edward Garcia",
-        "seatNo": "11A"
+        "seatNumber": "11A"
     },
     {
         "id": "8",
         "name": "Fiona Harris",
-        "seatNo": "16B"
+        "seatNumber": "16B"
     },
     {
         "id": "9",
         "name": "George Clark",
-        "seatNo": "12C"
+        "seatNumber": "12C"
     },
     {
         "id": "10",
         "name": "Hannah Lewis",
-        "seatNo": "10D"
+        "seatNumber": "10D"
     },
     {
         "id": "11",
         "name": "Ian Martinez",
-        "seatNo": "14E"
+        "seatNumber": "14E"
     },
     {
         "id": "12",
         "name": "Jasmine Lee",
-        "seatNo": "13F"
+        "seatNumber": "13F"
     },
     {
         "id": "13",
         "name": "Kevin Walker",
-        "seatNo": "15A"
+        "seatNumber": "15A"
     },
     {
         "id": "14",
         "name": "Laura Hall",
-        "seatNo": "11B"
+        "seatNumber": "11B"
     },
     {
         "id": "15",
         "name": "Michael Young",
-        "seatNo": "16C"
+        "seatNumber": "16C"
     },
     {
         "id": "16",
         "name": "Nancy King",
-        "seatNo": "9D"
+        "seatNumber": "9D"
     },
     {
         "id": "17",
         "name": "Oscar Scott",
-        "seatNo": "12E"
+        "seatNumber": "12E"
     },
     {
         "id": "18",
         "name": "Paul Allen",
-        "seatNo": "10F"
+        "seatNumber": "10F"
     },
     {
         "id": "19",
         "name": "Rachel Moore",
-        "seatNo": "14A"
+        "seatNumber": "14A"
     },
     {
         "id": "20",
         "name": "Steve Robinson",
-        "seatNo": "13B"
+        "seatNumber": "13B"
     }
 ]

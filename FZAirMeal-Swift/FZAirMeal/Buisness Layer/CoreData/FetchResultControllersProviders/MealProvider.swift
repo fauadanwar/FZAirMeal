@@ -8,32 +8,10 @@
 import Foundation
 import CoreData
 
-class MealProvider
-{
-    private weak var fetchedResultControllerDelegate: NSFetchedResultsControllerDelegate?
-
-    init(With fetchedResultControllerDelegate: NSFetchedResultsControllerDelegate)
-    {
-        self.fetchedResultControllerDelegate = fetchedResultControllerDelegate
+// Usage example for CDMeal
+class MealProvider: CoreDataProvider<CDMeal> {
+    init(delegate: NSFetchedResultsControllerDelegate) {
+        super.init(with: delegate)
     }
-
-    lazy var fetchedResultController: NSFetchedResultsController<CDMeal> =
-        {
-            let fetchRequest: NSFetchRequest<CDMeal> = CDMeal.fetchRequest()
-            fetchRequest.fetchBatchSize = 20
-            fetchRequest.sortDescriptors = [NSSortDescriptor(key: "id", ascending: true)]
-
-            let controller = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: PersistentStorage.shared.context, sectionNameKeyPath: nil, cacheName: nil)
-
-            controller.delegate = fetchedResultControllerDelegate
-
-            do{
-                 try controller.performFetch()
-            } catch{
-                debugPrint(error)
-            }
-
-            return controller
-    }()
-
 }
+

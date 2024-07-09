@@ -12,18 +12,11 @@ class PassengerViewController: UIViewController {
 
     @IBOutlet weak var tblPassengerList: UITableView!
 
-    lazy var passengerDataProvider: PassengerProvider =
-    {
-        let dataProvider = PassengerProvider(With: self)
-        return dataProvider
-    }()
     private let passengerViewModel = PassengerViewModel()
-    var pairingViewModel: PairingViewModel?
 
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
-        PersistentStorage.shared.printDocumentDirectoryPath()
         self.tblPassengerList.reloadData()
     }
     
@@ -35,11 +28,11 @@ class PassengerViewController: UIViewController {
         // Pass the selected object to the new view controller.
         if(segue.identifier == SegueIdentifier.navigateToMealView)
         {
-            let mealViewController = segue.destination as? MealViewController
-            guard mealViewController != nil else { return }
-            let passenger = passengerDataProvider.fetchedResultController.object(at: self.tblPassengerList.indexPathForSelectedRow!).convertToRecord()
-            mealViewController?.pairingViewModel = pairingViewModel
-            mealViewController?.selectedPassenger = passenger
+            if let mealViewController = segue.destination as? MealViewController,
+               let indexPath = self.tblPassengerList.indexPathForSelectedRow {
+                let passenger = passengerViewModel.getPassengersAt(indexPath: indexPath)
+                mealViewController.selectedPassenger = passenger
+            }
         }
     }
 }
@@ -51,27 +44,21 @@ extension PassengerViewController : UITableViewDelegate, UITableViewDataSource
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        passengerDataProvider.fetchedResultController.fetchedObjects?.count ?? 0
+        passengerViewModel.getPassengerCount()
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
         let cell = tableView.dequeueReusableCell(withIdentifier: "PassengerCell") as! PassengerTableViewCell
-        let cdPassenger = passengerDataProvider.fetchedResultController.object(at: indexPath)
-        let passenger = cdPassenger.convertToRecord()
-        let meal = cdPassenger.toOrder?.toMeal?.convertToRecord()
-        cell.lblMaelTitle.text = "Meal:"
-        cell.lblMealName.text = meal?.name ?? "No Order"
-        cell.lblName.text = passenger?.name
-        cell.lblSeatNumber.text = passenger?.seatNumber
-
+        let passengerAndMeal = passengerViewModel.getPassengerAndMealAt(indexPath: indexPath)
+        cell.confiureCell(passenger: passengerAndMeal.0, meal: passengerAndMeal.1)
         return cell
     }
 }
 
-extension PassengerViewController : NSFetchedResultsControllerDelegate
+extension PassengerViewController : PassengerViewModelDelegate
 {
-    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+    func passengerDataUpdated() {
         self.tblPassengerList.reloadData()
     }
 }
