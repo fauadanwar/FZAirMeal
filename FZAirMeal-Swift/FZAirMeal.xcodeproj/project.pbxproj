@@ -64,6 +64,7 @@
 		A07D40A02C3AC7190058B04A /* PeerPairingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A07D409F2C3AC7190058B04A /* PeerPairingManager.swift */; };
 		A07D40A22C3ACA310058B04A /* PairingDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = A07D40A12C3ACA310058B04A /* PairingDevice.swift */; };
 		A0E7B7492C3D6AD500EB1290 /* CoreDataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0E7B7482C3D6AD400EB1290 /* CoreDataProvider.swift */; };
+		A0E7B74B2C3FC49300EB1290 /* Date+toString.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0E7B74A2C3FC49300EB1290 /* Date+toString.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -145,6 +146,7 @@
 		A07D409F2C3AC7190058B04A /* PeerPairingManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeerPairingManager.swift; sourceTree = "<group>"; };
 		A07D40A12C3ACA310058B04A /* PairingDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PairingDevice.swift; sourceTree = "<group>"; };
 		A0E7B7482C3D6AD400EB1290 /* CoreDataProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataProvider.swift; sourceTree = "<group>"; };
+		A0E7B74A2C3FC49300EB1290 /* Date+toString.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+toString.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -338,6 +340,7 @@
 			children = (
 				1880747A2B4598000057B8A8 /* CommonConstants.swift */,
 				188074A72B4728E60057B8A8 /* SegueIdentifier.swift */,
+				A0E7B74C2C3FC49F00EB1290 /* Extentions */,
 			);
 			path = Contants;
 			sourceTree = "<group>";
@@ -413,6 +416,14 @@
 				A07D409D2C3ABB890058B04A /* PeerPairingRepository.swift */,
 			);
 			path = MultipeerConnectivity;
+			sourceTree = "<group>";
+		};
+		A0E7B74C2C3FC49F00EB1290 /* Extentions */ = {
+			isa = PBXGroup;
+			children = (
+				A0E7B74A2C3FC49300EB1290 /* Date+toString.swift */,
+			);
+			path = Extentions;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -553,6 +564,7 @@
 				188074542B4569420057B8A8 /* MealDataManager.swift in Sources */,
 				A07D40A22C3ACA310058B04A /* PairingDevice.swift in Sources */,
 				1880749B2B46DA680057B8A8 /* PairingViewModel.swift in Sources */,
+				A0E7B74B2C3FC49300EB1290 /* Date+toString.swift in Sources */,
 				188074AA2B4735B30057B8A8 /* MealViewModel.swift in Sources */,
 				188074A02B46F9250057B8A8 /* OrderTableViewCell.swift in Sources */,
 				188074752B457D690057B8A8 /* CDPassengerExtention.swift in Sources */,

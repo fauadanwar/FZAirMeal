@@ -11,12 +11,26 @@ import CoreData
 protocol MealCoreDataRepositoryProtocol: BaseCoreDataRepositoryProtocol where T == Meal {
     func insertMealRecords(records:Array<Meal>) -> Bool
     func batchInsertMealRecords(records:Array<Meal>) -> Bool
+    func getMealAt(indexPath: IndexPath) -> Meal?
+    func getMealsCount() -> Int
 }
 
-struct MealCoreDataRepository : MealCoreDataRepositoryProtocol {
+protocol MealCoreDataRepositoryDelegate: AnyObject
+{
+    func mealsDataUpdated()
+}
+
+class MealCoreDataRepository: NSObject, MealCoreDataRepositoryProtocol {
 
     typealias T = Meal
     typealias CDT = CDMeal
+    weak var mealCoreDataRepositoryDelegate: MealCoreDataRepositoryDelegate?
+
+    lazy var mealDataProvider: MealProvider =
+    {
+        let dataProvider = MealProvider(delegate: self)
+        return dataProvider
+    }()
     
     func batchInsertMealRecords(records: Array<Meal>) -> Bool {
         PersistentStorage.shared.persistentContainer.performBackgroundTask { privateManagedContext in
@@ -50,6 +64,7 @@ struct MealCoreDataRepository : MealCoreDataRepositoryProtocol {
                 meal.details = data.details
                 meal.cost = data.cost
                 meal.quantity = Int16(data.quantity)
+                meal.orderedQuantity = Int16(data.orderedQuantity)
             }
             
             index  += 1
@@ -73,6 +88,8 @@ struct MealCoreDataRepository : MealCoreDataRepositoryProtocol {
                 cdMeal.details = mealRecord.details
                 cdMeal.cost = mealRecord.cost
                 cdMeal.quantity = Int16(mealRecord.quantity)
+                cdMeal.orderedQuantity = Int16(mealRecord.orderedQuantity)
+
             }
 
             if(privateManagedContext.hasChanges){
@@ -89,6 +106,7 @@ struct MealCoreDataRepository : MealCoreDataRepositoryProtocol {
         cdRecord.details = record.details
         cdRecord.cost = record.cost
         cdRecord.quantity = Int16(record.quantity)
+        cdRecord.orderedQuantity = Int16(record.orderedQuantity)
     }
     
     func assignProperties(record: Meal, cdRecord: CDMeal) {
@@ -97,5 +115,23 @@ struct MealCoreDataRepository : MealCoreDataRepositoryProtocol {
         cdRecord.details = record.details
         cdRecord.cost = record.cost
         cdRecord.quantity = Int16(record.quantity)
+        cdRecord.orderedQuantity = Int16(record.orderedQuantity)
+    }
+    
+    func getMealAt(indexPath: IndexPath) -> Meal? {
+        let cdMeal = mealDataProvider.fetchedResultsController.object(at: indexPath)
+        return cdMeal.convertToRecord()
+    }
+    
+    func getMealsCount() -> Int {
+        mealDataProvider.fetchedResultsController.fetchedObjects?.count ?? 0
+    }
+}
+
+
+extension MealCoreDataRepository : NSFetchedResultsControllerDelegate
+{
+    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        mealCoreDataRepositoryDelegate?.mealsDataUpdated()
     }
 }

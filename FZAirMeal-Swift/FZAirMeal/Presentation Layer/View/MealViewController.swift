@@ -13,40 +13,49 @@ class MealViewController: UIViewController {
     @IBOutlet weak var tblMealList: UITableView!
     @IBOutlet weak var barButtonPlaceOrder: UIBarButtonItem!
 
-    lazy var mealDataProvider: MealProvider =
-    {
-        let dataProvider = MealProvider(delegate: self)
-        return dataProvider
-    }()
-    var selectedPassenger: Passenger? = nil
+    var passenger: Passenger? = nil
     private let mealViewModel = MealViewModel()
-    var pairingViewModel: PairingViewModel?
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
         self.tblMealList.reloadData()
-        if let _ = selectedPassenger?.orderId
+        if let _ = passenger?.orderId
         {
-            barButtonPlaceOrder.isEnabled = false
+            barButtonPlaceOrder.title = "Place Order"
+        }
+        else {
+            barButtonPlaceOrder.title = "Cancel Order"
         }
     }
     
     @IBAction func placeOrderButtonTapped(_ sender: Any) {
         
-        if let selectedRow = self.tblMealList.indexPathForSelectedRow,
-           let meal = mealDataProvider.fetchedResultsController.object(at: selectedRow).convertToRecord(),
-           let selectedPassenger
+        if let indexPath = self.tblMealList.indexPathForSelectedRow,
+           let meal = mealViewModel.getMealAt(indexPath: indexPath),
+           let passenger
         {
-            let order = Order(id: "\(UUID())", passengerId: selectedPassenger.id, mealId: meal.id, time: Date())
-            if(mealViewModel.placeOrder(order: order))
+            if let orderId = passenger.orderId
             {
-//                _ = pairingViewModel?.send(order: order) // User this response for ofline sync
-                displayAlert(message: "Order Placed")
+                if(mealViewModel.cancelOrder(orderId: orderId))
+                {
+                    displayAlert(message: "Order Canceled")
+                }
+                else
+                {
+                    displayAlert(message: "Failed to Canceled order")
+                }
             }
-            else
-            {
-                displayAlert(message: "Failed to place order")
+            else {
+                let order = Order(id: "\(UUID())", passengerId: passenger.id, mealId: meal.id, time: Date())
+                if(mealViewModel.placeOrder(order: order))
+                {
+                    displayAlert(message: "Order Placed")
+                }
+                else
+                {
+                    displayAlert(message: "Failed to place order")
+                }
             }
         }
         else
@@ -59,7 +68,7 @@ class MealViewController: UIViewController {
     {
         let alert = UIAlertController(title: "Alert", message: message, preferredStyle: .alert)
         let okAction = UIAlertAction(title: "Ok", style: .default) { (action) in
-            if message == "Order Placed"
+            if message == "Order Placed" || message == "Order Canceled"
             {
                 self.navigationController?.popViewController(animated: true)
             }
@@ -76,34 +85,20 @@ extension MealViewController : UITableViewDelegate, UITableViewDataSource
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        mealDataProvider.fetchedResultsController.fetchedObjects?.count ?? 0
+        mealViewModel.getMealsCount()
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-
         let cell = tableView.dequeueReusableCell(withIdentifier: "MealCell") as! MealTableViewCell
-
-        let meal = mealDataProvider.fetchedResultsController.object(at: indexPath).convertToRecord()
-        cell.lblName.text = meal?.name
-        cell.lblQuantityTitle.text = "Meals Left:"
-        if let quantity = meal?.quantity
-        {
-            cell.lblQuantity.text = quantity > 0 ? "\(quantity)" : "Out of Stock"
-        }
-        if let cost = meal?.cost
-        {
-            cell.lblCost.text = "\(cost)"
-        }
-        cell.lblDetails.text = meal?.details
-        cell.lblCostTitle.text = "Cost:"
-
+        let meal = mealViewModel.getMealAt(indexPath: indexPath)
+        cell.confiureCell(meal: meal)
         return cell
     }
 }
 
-extension MealViewController : NSFetchedResultsControllerDelegate
+extension MealViewController : MealViewModelDelegate
 {
-    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+    func mealDataUpdated() {
         self.tblMealList.reloadData()
     }
 }

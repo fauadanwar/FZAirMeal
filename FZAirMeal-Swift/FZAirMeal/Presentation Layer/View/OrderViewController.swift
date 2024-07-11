@@ -12,12 +12,7 @@ class OrderViewController: UIViewController {
 
     @IBOutlet weak var tblOrderList: UITableView!
 
-    private let refreshControl = UIRefreshControl()
-    lazy var orderDataProvider: OrderProvider =
-    {
-        let dataProvider = OrderProvider(delegate: self)
-        return dataProvider
-    }()
+
     private let orderViewModel = OrderViewModel()
 
     override func viewDidLoad() {
@@ -34,39 +29,21 @@ extension OrderViewController : UITableViewDelegate, UITableViewDataSource
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        orderDataProvider.fetchedResultsController.fetchedObjects?.count ?? 0
+        orderViewModel.getOrdersCount()
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
         let cell = tableView.dequeueReusableCell(withIdentifier: "OrderCell") as! OrderTableViewCell
-        
-        let cdOrder = orderDataProvider.fetchedResultsController.object(at: indexPath)
-        let order = cdOrder.convertToRecord()
-        let meal = cdOrder.toMeal?.convertToRecord()
-        let passenger = cdOrder.toPassenger?.convertToRecord()
-
-        cell.lblTime.text = order?.time.toString()
-        cell.lblMealName.text = meal?.name
-        cell.lblPassengerSeatNumber.text = passenger?.seatNumber
-        cell.lblTimeTitle.text = "Time:"
-
+        let records = orderViewModel.getPassengerMealAndOrderAt(indexPath: indexPath)
+        cell.confiureCell(order: records.2, passenger: records.0, meal: records.1)
         return cell
     }
 }
 
-extension OrderViewController : NSFetchedResultsControllerDelegate
+extension OrderViewController : OrderDataManagerDelegate
 {
-    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+    func orderDataUpdated() {
         self.tblOrderList.reloadData()
-    }
-}
-
-extension Date {
-    func toString(format: String = "yyyy-MM-dd HH:mm") -> String {
-        let formatter = DateFormatter()
-        formatter.dateStyle = .short
-        formatter.dateFormat = format
-        return formatter.string(from: self)
     }
 }

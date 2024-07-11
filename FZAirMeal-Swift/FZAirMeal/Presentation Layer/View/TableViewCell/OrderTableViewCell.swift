@@ -24,5 +24,12 @@ class OrderTableViewCell: UITableViewCell {
 
         // Configure the view for the selected state
     }
-
+    
+    func confiureCell(order: Order?, passenger: Passenger?, meal: Meal?)
+    {
+        lblTime.text = order?.time.toString()
+        lblMealName.text = meal?.name
+        lblPassengerSeatNumber.text = passenger?.seatNumber
+        lblTimeTitle.text = "Time:"
+    }
 }

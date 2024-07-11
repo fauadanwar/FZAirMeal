@@ -19,15 +19,17 @@ class Meal: Record, Hashable, Codable{
     let id: String
     let name: String
     let details: String?
-    var quantity: Int
+    let quantity: Int
     let cost: Double
+    var orderedQuantity: Int
     
-    init(id: String, name: String, details: String?, quantity: Int, cost: Double) {
+    init(id: String, name: String, details: String?, quantity: Int, cost: Double, orderedQuantity: Int) {
         self.id = id
         self.name = name
         self.details = details
         self.quantity = quantity
         self.cost = cost
+        self.orderedQuantity = orderedQuantity
     }
     
     func data() -> Data? {

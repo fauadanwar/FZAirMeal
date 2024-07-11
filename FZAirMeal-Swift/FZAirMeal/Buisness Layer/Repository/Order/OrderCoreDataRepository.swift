@@ -9,13 +9,97 @@ import Foundation
 import CoreData
 
 protocol OrderRepositoryProtocol: BaseCoreDataRepositoryProtocol where T == Order  {
-    
+    func insertOrderRecords(records:Array<Order>) -> Bool
+    func batchInsertOrderRecords(records:Array<Order>) -> Bool
+    func getOrderAt(indexPath: IndexPath) -> Order?
+    func getOrdersCount() -> Int
+    func getPassengerMealAndOrderAt(indexPath: IndexPath) -> (Passenger?, Meal?, Order?)
 }
 
-struct OrderCoreDataRepository : OrderRepositoryProtocol
+protocol OrderCoreDataRepositoryDelegate: AnyObject
+{
+    func orderDataUpdated()
+}
+
+class OrderCoreDataRepository: NSObject, OrderRepositoryProtocol
 {
     typealias T = Order
     typealias CDT = CDOrder
+    weak var orderCoreDataRepositoryDelegate: OrderCoreDataRepositoryDelegate?
+    private let cdPassengerDataRepository: PassengerCoreDataRepository = PassengerCoreDataRepository()
+    private let cdMealDataRepository: MealCoreDataRepository = MealCoreDataRepository()
+
+    lazy var orderDataProvider: OrderProvider =
+    {
+        let dataProvider = OrderProvider(delegate: self)
+        return dataProvider
+    }()
+    
+    func batchInsertOrderRecords(records: Array<Order>) -> Bool {
+        PersistentStorage.shared.persistentContainer.performBackgroundTask { privateManagedContext in
+
+            // batch inserts
+            let request = self.createBatchInsertRequest(records: records)
+            do{
+                try privateManagedContext.execute(request)
+            }catch {
+                debugPrint("batch insert error")
+            }
+        }
+
+        return true
+
+    }
+
+    private func createBatchInsertRequest(records:Array<Order>) -> NSBatchInsertRequest {
+
+        let totalCount = records.count
+        var index = 0
+
+        let batchInsert = NSBatchInsertRequest(entity: CDOrder.entity()) { [weak self] (managedObject: NSManagedObject) -> Bool in
+
+            guard let self else { return false }
+            guard index < totalCount else {return true}
+
+            if let order = managedObject as? CDOrder {
+                let data = records[index]
+                order.id = data.id
+                order.toPassenger = cdPassengerDataRepository.getCDRecord(byIdentifier: data.passengerId)
+                order.toMeal = cdMealDataRepository.getCDRecord(byIdentifier: data.mealId)
+                order.time = data.time
+            }
+            
+            index  += 1
+            return false
+        }
+
+        return batchInsert
+
+    }
+
+    func insertOrderRecords(records: Array<Order>) -> Bool {
+
+        debugPrint("OrderDataRepository: Insert record operation is starting")
+
+        PersistentStorage.shared.persistentContainer.performBackgroundTask { privateManagedContext in
+            //insert code
+            records.forEach { [weak self] orderRecord in
+                guard let self else { return }
+                let cdOrder = CDOrder(context: privateManagedContext)
+                cdOrder.id = orderRecord.id
+                cdOrder.toPassenger = cdPassengerDataRepository.getCDRecord(byIdentifier: orderRecord.passengerId)
+                cdOrder.toMeal = cdMealDataRepository.getCDRecord(byIdentifier: orderRecord.mealId)
+                cdOrder.time = orderRecord.time
+            }
+
+            if(privateManagedContext.hasChanges){
+                try? privateManagedContext.save()
+                debugPrint("MealDataRepository: Insert record operation is completed")
+            }
+        }
+
+        return true
+    }
     
     func assignProperties(record: Order, cdRecord: CDOrder) {
         cdRecord.id = record.id
@@ -24,7 +108,7 @@ struct OrderCoreDataRepository : OrderRepositoryProtocol
         let _cdMealDataRepository = MealCoreDataRepository()
         if let cdMeal = _cdMealDataRepository.getCDRecord(byIdentifier: record.mealId)
         {
-            cdMeal.quantity -= 1
+            cdMeal.orderedQuantity -= 1
             cdRecord.toMeal = cdMeal
         }
         
@@ -49,7 +133,7 @@ struct OrderCoreDataRepository : OrderRepositoryProtocol
         let _cdMealDataRepository = MealCoreDataRepository()
         if let cdMeal = _cdMealDataRepository.getCDRecord(byIdentifier: mealId)
         {
-            cdMeal.quantity += 1
+            cdMeal.orderedQuantity -= 1
         }
         let _cdPassengerDataRepository = PassengerCoreDataRepository()
         if let cdPassenger = _cdPassengerDataRepository.getCDRecord(byIdentifier: passengerId)
@@ -58,5 +142,29 @@ struct OrderCoreDataRepository : OrderRepositoryProtocol
         }
         PersistentStorage.shared.context.delete(cdRecord)
         return PersistentStorage.shared.saveContext()
+    }
+    
+    func getOrderAt(indexPath: IndexPath) -> Order? {
+        let cdOrder = orderDataProvider.fetchedResultsController.object(at: indexPath)
+        return cdOrder.convertToRecord()
+    }
+    
+    func getPassengerMealAndOrderAt(indexPath: IndexPath) -> (Passenger?, Meal?, Order?) {
+        let cdOrder = orderDataProvider.fetchedResultsController.object(at: indexPath)
+        let order = cdOrder.convertToRecord()
+        let meal = cdOrder.toMeal?.convertToRecord()
+        let passenger = cdOrder.toPassenger?.convertToRecord()
+        return (passenger, meal, order)
+    }
+    
+    func getOrdersCount() -> Int {
+        orderDataProvider.fetchedResultsController.fetchedObjects?.count ?? 0
+    }
+}
+
+extension OrderCoreDataRepository : NSFetchedResultsControllerDelegate
+{
+    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        orderCoreDataRepositoryDelegate?.orderDataUpdated()
     }
 }

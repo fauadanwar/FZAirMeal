@@ -5,6 +5,7 @@
         <attribute name="details" optional="YES" attributeType="String"/>
         <attribute name="id" attributeType="String"/>
         <attribute name="name" attributeType="String"/>
+        <attribute name="orderedQuantity" attributeType="Integer 16" minValueString="0" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="quantity" attributeType="Integer 16" minValueString="0" defaultValueString="0" usesScalarValueType="YES"/>
         <relationship name="toOrder" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="CDOrder" inverseName="toMeal" inverseEntity="CDOrder"/>
         <uniquenessConstraints>

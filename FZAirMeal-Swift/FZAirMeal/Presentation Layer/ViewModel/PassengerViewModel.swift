@@ -13,10 +13,9 @@ protocol PassengerViewModelDelegate: AnyObject
     func passengerDataUpdated()
 }
 
-class PassengerViewModel: ObservableObject {
+class PassengerViewModel{
     
     var passengerManager: PassengerDataManager
-    private var cancellables = Set<AnyCancellable>()
     weak var passengerViewModelDelegate: PassengerViewModelDelegate?
     
     init(passengerManager: PassengerDataManager = PassengerDataManager()) {
@@ -24,7 +23,7 @@ class PassengerViewModel: ObservableObject {
     }
     
     func getPassengersAt(indexPath: IndexPath) -> Passenger? {
-        return passengerManager.getPassengersAt(indexPath: indexPath)
+        return passengerManager.getPassengerAt(indexPath: indexPath)
     }
     
     func getPassengerAndMealAt(indexPath: IndexPath) -> (Passenger?, Meal?) {

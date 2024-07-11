@@ -21,7 +21,7 @@ protocol PassengerCoreDataRepositoryDelegate: AnyObject
     func passengerDataUpdated()
 }
 
-class PassengerCoreDataRepository : NSObject, PassengerCoreDataRepositoryProtocol {
+class PassengerCoreDataRepository: NSObject, PassengerCoreDataRepositoryProtocol {
     typealias T = Passenger
     typealias CDT = CDPassenger
     weak var passengerCoreDataRepositoryDelegate: PassengerCoreDataRepositoryDelegate?

@@ -4,62 +4,39 @@
         "name": "Chicken Salad",
         "details": "Freshly prepared chicken salad with mixed greens",
         "cost": 12.99,
-        "quantity": 100
+        "quantity": 10,
+        "orderedQuantity": 0
     },
     {
         "id": "2",
         "name": "Vegetable Lasagna",
         "details": "Layers of pasta with seasonal vegetables and cheese",
         "cost": 14.99,
-        "quantity": 100
+        "quantity": 10,
+        "orderedQuantity": 0
     },
     {
         "id": "3",
         "name": "Beef Steak",
         "details": "Grilled beef steak with a side of mashed potatoes",
         "cost": 19.99,
-        "quantity": 100
+        "quantity": 10,
+        "orderedQuantity": 0
     },
     {
         "id": "4",
         "name": "Grilled Fish",
         "details": "Grilled fish fillet served with steamed vegetables",
         "cost": 18.99,
-        "quantity": 100
+        "quantity": 10,
+        "orderedQuantity": 0
     },
     {
         "id": "5",
         "name": "Vegan Wrap",
         "details": "Whole wheat wrap filled with fresh vegetables and hummus",
         "cost": 11.99,
-        "quantity": 100
-    },
-    {
-        "id": "6",
-        "name": "Coke",
-        "details": "Carbonated soft drink",
-        "cost": 2.99,
-        "quantity": 200
-    },
-    {
-        "id": "7",
-        "name": "Orange Juice",
-        "details": "Freshly squeezed orange juice",
-        "cost": 3.99,
-        "quantity": 200
-    },
-    {
-        "id": "8",
-        "name": "Water",
-        "details": "Bottled mineral water",
-        "cost": 1.99,
-        "quantity": 200
-    },
-    {
-        "id": "9",
-        "name": "Coffee",
-        "details": "Freshly brewed coffee",
-        "cost": 2.49,
-        "quantity": 200
+        "quantity": 2,
+        "orderedQuantity": 0
     }
 ]

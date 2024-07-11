@@ -7,10 +7,16 @@
 
 import Foundation
 
-struct MealDataManager {
+protocol MealDataManagerDelegate: AnyObject
+{
+    func mealDataUpdated()
+}
+
+class MealDataManager {
 
     private let _cdMealDataRepository: any MealCoreDataRepositoryProtocol
     private let _mealResourceRepository: any MealResourceRepositoryProtocol
+    weak var mealDataManagerDelegate: MealDataManagerDelegate?
 
     init(_cdMealDataRepository: any MealCoreDataRepositoryProtocol = MealCoreDataRepository(), _mealResourceRepository: any MealResourceRepositoryProtocol = MealResourceRepository()) {
         self._cdMealDataRepository = _cdMealDataRepository
@@ -35,15 +41,17 @@ struct MealDataManager {
     
     func getMealRecordForHost(completionHandler:@escaping(_ result: Array<Meal>?)-> Void) {
         // get data from api
-        _mealResourceRepository.getRecordsFromAPI { apiResponse in
-            if(apiResponse != nil && apiResponse?.count != 0){
+        _mealResourceRepository.getRecordsFromAPI {[weak self] apiResponse in
+            guard let self else { return }
+            if(apiResponse != nil && apiResponse?.count != 0) {
                 // insert record in core data
                 _ = _cdMealDataRepository.batchInsertMealRecords(records: apiResponse!)
                 completionHandler(apiResponse)
             }
             else {
                 // get data from file
-                _mealResourceRepository.getRecords { apiResponse in
+                _mealResourceRepository.getRecords { [weak self] apiResponse in
+                    guard let self else { return }
                     if(apiResponse != nil && apiResponse?.count != 0){
                         // insert record in core data
                         _ = _cdMealDataRepository.batchInsertMealRecords(records: apiResponse!)
@@ -55,6 +63,18 @@ struct MealDataManager {
                 }
             }
         }
+    }
+    
+    func getMealsCount() -> Int {
+        return _cdMealDataRepository.getMealsCount()
+    }
+    
+    func getMealAt(indexPath: IndexPath) -> Meal? {
+        return _cdMealDataRepository.getMealAt(indexPath: indexPath)
+    }
+    
+    func getMealWith(mealid: String) -> Meal? {
+        return _cdMealDataRepository.get(byIdentifier: mealid)
     }
     
     func deleteMeal(byIdentifier id: String) -> Bool
@@ -70,5 +90,12 @@ struct MealDataManager {
     func resetCoreData()
     {
         return _cdMealDataRepository.resetCoreData()
+    }
+}
+
+extension MealDataManager : MealCoreDataRepositoryDelegate
+{
+    func mealsDataUpdated() {
+        mealDataManagerDelegate?.mealDataUpdated()
     }
 }

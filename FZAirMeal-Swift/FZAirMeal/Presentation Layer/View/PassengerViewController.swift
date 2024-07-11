@@ -31,7 +31,7 @@ class PassengerViewController: UIViewController {
             if let mealViewController = segue.destination as? MealViewController,
                let indexPath = self.tblPassengerList.indexPathForSelectedRow {
                 let passenger = passengerViewModel.getPassengersAt(indexPath: indexPath)
-                mealViewController.selectedPassenger = passenger
+                mealViewController.passenger = passenger
             }
         }
     }

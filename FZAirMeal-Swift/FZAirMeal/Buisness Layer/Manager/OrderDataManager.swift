@@ -8,10 +8,20 @@
 import Foundation
 import CoreData
 
-struct OrderDataManager
+protocol OrderDataManagerDelegate: AnyObject
 {
-    private let _cdOrderRepository : any OrderRepositoryProtocol = OrderCoreDataRepository()
+    func orderDataUpdated()
+}
 
+class OrderDataManager
+{
+    private let _cdOrderRepository : any OrderRepositoryProtocol
+    weak var orderDataManagerDelegate: OrderDataManagerDelegate?
+
+    init(_cdOrderRepository: any OrderRepositoryProtocol = OrderCoreDataRepository()) {
+        self._cdOrderRepository = _cdOrderRepository
+    }
+    
     func create(record: Order) -> Bool
     {
         _cdOrderRepository.create(record: record)
@@ -36,6 +46,21 @@ struct OrderDataManager
         completionHandler(nil)
     }
     
+    func getOrdersCount() -> Int {
+        return _cdOrderRepository.getOrdersCount()
+    }
+    
+    func getOrderAt(indexPath: IndexPath) -> Order? {
+        return _cdOrderRepository.getOrderAt(indexPath: indexPath)
+    }
+    
+    func getPassengerMealAndOrderAt(indexPath: IndexPath) -> (Passenger?, Meal?, Order?) {
+        return _cdOrderRepository.getPassengerMealAndOrderAt(indexPath: indexPath)
+    }
+    
+    func getOrderWith(orderid: String) -> Order? {
+        return _cdOrderRepository.get(byIdentifier: orderid)
+    }
     
     func getOrderRecord(completionHandler:@escaping(_ result: Array<Order>?)-> Void) {
         let response = _cdOrderRepository.getAll()
@@ -50,3 +75,8 @@ struct OrderDataManager
     }
 }
 
+extension OrderDataManager: OrderCoreDataRepositoryDelegate {
+    func orderDataUpdated() {
+        orderDataManagerDelegate?.orderDataUpdated()
+    }
+}

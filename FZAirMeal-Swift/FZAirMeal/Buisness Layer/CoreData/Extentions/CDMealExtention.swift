@@ -13,6 +13,6 @@ extension CDMeal: CDRecord {
     
     func convertToRecord() -> Meal? {
         guard let id, let name else { return nil }
-        return Meal(id: id, name: name, details: self.details, quantity: Int(self.quantity), cost: self.cost)
+        return Meal(id: id, name: name, details: self.details, quantity: Int(self.quantity), cost: self.cost, orderedQuantity: Int(self.orderedQuantity))
     }
 }

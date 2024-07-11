@@ -66,8 +66,12 @@ class PassengerDataManager {
         completionHandler(nil)
     }
     
-    func getPassengersAt(indexPath: IndexPath) -> Passenger? {
+    func getPassengerAt(indexPath: IndexPath) -> Passenger? {
         return _cdPassengerDataRepository.getPassengersAt(indexPath: indexPath)
+    }   
+    
+    func getPassengerWith(passengerId: String) -> Passenger? {
+        return _cdPassengerDataRepository.get(byIdentifier: passengerId)
     }
     
     func getPassengerAndMealAt(indexPath: IndexPath) -> (Passenger?, Meal?) {

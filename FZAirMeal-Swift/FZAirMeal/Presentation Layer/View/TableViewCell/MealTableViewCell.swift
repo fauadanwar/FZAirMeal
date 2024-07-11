@@ -26,5 +26,21 @@ class MealTableViewCell: UITableViewCell {
 
         // Configure the view for the selected state
     }
-
+    
+    func confiureCell(meal: Meal?)
+    {
+        lblName.text = meal?.name
+        lblQuantityTitle.text = "Meals Left:"
+        if let quantity = meal?.quantity,
+           let orderedQuantity = meal?.orderedQuantity
+        {
+            lblQuantity.text = (quantity - orderedQuantity) > 0 ? "\(quantity - orderedQuantity)" : "Out of Stock"
+        }
+        if let cost = meal?.cost
+        {
+            lblCost.text = "\(cost)"
+        }
+        lblDetails.text = meal?.details
+        lblCostTitle.text = "Cost:"
+    }
 }
