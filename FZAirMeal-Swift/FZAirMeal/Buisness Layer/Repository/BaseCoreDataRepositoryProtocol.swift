@@ -75,4 +75,8 @@ extension BaseCoreDataRepositoryProtocol {
     func resetCoreData() {
         PersistentStorage.shared.resetCoreData(entityName: String(describing: CDT.self))
     }
+    
+    func resetAllCoreData() {
+        PersistentStorage.shared.resetAllCoreData()
+    }
 }

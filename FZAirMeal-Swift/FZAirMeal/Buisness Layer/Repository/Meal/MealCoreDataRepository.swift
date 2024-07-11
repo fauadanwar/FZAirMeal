@@ -7,6 +7,7 @@
 
 import Foundation
 import CoreData
+import Combine
 
 protocol MealCoreDataRepositoryProtocol: BaseCoreDataRepositoryProtocol where T == Meal {
     func insertMealRecords(records:Array<Meal>) -> Bool
@@ -25,6 +26,7 @@ class MealCoreDataRepository: NSObject, MealCoreDataRepositoryProtocol {
     typealias T = Meal
     typealias CDT = CDMeal
     weak var mealCoreDataRepositoryDelegate: MealCoreDataRepositoryDelegate?
+    private var cancellables = Set<AnyCancellable>()
 
     lazy var mealDataProvider: MealProvider =
     {
@@ -32,13 +34,30 @@ class MealCoreDataRepository: NSObject, MealCoreDataRepositoryProtocol {
         return dataProvider
     }()
     
+    override init() {
+        super.init()
+        PersistentStorage.shared.dataClearPublisher
+                   .sink { [weak self] in
+                       guard let self = self else { return }
+                       mealDataProvider = MealProvider(delegate: self)
+                   }
+                   .store(in: &cancellables)
+        PersistentStorage.shared.dataInsertPublisher
+            .sink { [weak self] in
+                guard let self = self else { return }
+                mealDataProvider = MealProvider(delegate: self)
+            }
+            .store(in: &cancellables)
+    }
+    
     func batchInsertMealRecords(records: Array<Meal>) -> Bool {
-        PersistentStorage.shared.persistentContainer.performBackgroundTask { privateManagedContext in
-
+        PersistentStorage.shared.persistentContainer.performBackgroundTask { [weak self] privateManagedContext in
+            guard let self = self else { return }
             // batch inserts
             let request = self.createBatchInsertRequest(records: records)
             do{
                 try privateManagedContext.execute(request)
+                PersistentStorage.shared.executeedInsert()
             }catch {
                 debugPrint("batch insert error")
             }

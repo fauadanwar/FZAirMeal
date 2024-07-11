@@ -28,6 +28,11 @@ class HostPairingManager: NSObject, ObservableObject {
         hostRepository.stopAdvertising()
     }
     
+    func resetAllCoreData()
+    {
+        hostRepository.resetAllCoreData()
+    }
+    
     func resetState() {
         hostRepository.resetState()
         requetingPairingDevice = nil

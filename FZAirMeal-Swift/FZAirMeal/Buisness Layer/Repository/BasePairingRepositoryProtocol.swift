@@ -10,4 +10,11 @@ import MultipeerConnectivity
 
 protocol BasePairingRepositoryProtocol {
     var session: MCSession { get }
+    func resetAllCoreData()
+}
+
+extension BasePairingRepositoryProtocol {
+    func resetAllCoreData() {
+        PersistentStorage.shared.resetAllCoreData()
+    }
 }

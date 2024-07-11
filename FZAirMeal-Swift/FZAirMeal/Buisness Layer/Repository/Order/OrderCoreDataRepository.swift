@@ -7,6 +7,7 @@
 
 import Foundation
 import CoreData
+import Combine
 
 protocol OrderRepositoryProtocol: BaseCoreDataRepositoryProtocol where T == Order  {
     func insertOrderRecords(records:Array<Order>) -> Bool
@@ -25,6 +26,7 @@ class OrderCoreDataRepository: NSObject, OrderRepositoryProtocol
 {
     typealias T = Order
     typealias CDT = CDOrder
+    private var cancellables = Set<AnyCancellable>()
     weak var orderCoreDataRepositoryDelegate: OrderCoreDataRepositoryDelegate?
     private let cdPassengerDataRepository: PassengerCoreDataRepository = PassengerCoreDataRepository()
     private let cdMealDataRepository: MealCoreDataRepository = MealCoreDataRepository()
@@ -35,13 +37,30 @@ class OrderCoreDataRepository: NSObject, OrderRepositoryProtocol
         return dataProvider
     }()
     
+    override init() {
+        super.init()
+        PersistentStorage.shared.dataClearPublisher
+            .sink { [weak self] in
+                guard let self = self else { return }
+                orderDataProvider = OrderProvider(delegate: self)
+            }
+            .store(in: &cancellables)
+        PersistentStorage.shared.dataInsertPublisher
+            .sink { [weak self] in
+                guard let self = self else { return }
+                orderDataProvider = OrderProvider(delegate: self)
+            }
+            .store(in: &cancellables)
+    }
+    
     func batchInsertOrderRecords(records: Array<Order>) -> Bool {
-        PersistentStorage.shared.persistentContainer.performBackgroundTask { privateManagedContext in
-
+        PersistentStorage.shared.persistentContainer.performBackgroundTask {  [weak self] privateManagedContext in
+            guard let self = self else { return }
             // batch inserts
             let request = self.createBatchInsertRequest(records: records)
             do{
                 try privateManagedContext.execute(request)
+                PersistentStorage.shared.executeedInsert()
             }catch {
                 debugPrint("batch insert error")
             }

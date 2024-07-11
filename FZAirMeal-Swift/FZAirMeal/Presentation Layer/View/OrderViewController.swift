@@ -17,8 +17,8 @@ class OrderViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
         self.tblOrderList.reloadData()
+        orderViewModel.orderViewModelDelegate = self
     }
 }
 
@@ -41,7 +41,7 @@ extension OrderViewController : UITableViewDelegate, UITableViewDataSource
     }
 }
 
-extension OrderViewController : OrderDataManagerDelegate
+extension OrderViewController : OrderViewModelDelegate
 {
     func orderDataUpdated() {
         self.tblOrderList.reloadData()

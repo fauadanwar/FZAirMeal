@@ -18,6 +18,12 @@ class PassengerViewController: UIViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         self.tblPassengerList.reloadData()
+        passengerViewModel.passengerViewModelDelegate = self
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.tblPassengerList.reloadData()
     }
     
     // MARK: - Navigation
@@ -44,7 +50,8 @@ extension PassengerViewController : UITableViewDelegate, UITableViewDataSource
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        passengerViewModel.getPassengerCount()
+        print("Passenger count: \(passengerViewModel.getPassengerCount())")
+        return passengerViewModel.getPassengerCount()
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -59,6 +66,10 @@ extension PassengerViewController : UITableViewDelegate, UITableViewDataSource
 extension PassengerViewController : PassengerViewModelDelegate
 {
     func passengerDataUpdated() {
-        self.tblPassengerList.reloadData()
+        DispatchQueue.main.async {
+            [weak self] in
+            guard let self = self else { return }
+            tblPassengerList.reloadData()
+        }
     }
 }

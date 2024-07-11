@@ -7,6 +7,7 @@
 
 import Foundation
 import CoreData
+import Combine
 
 final class PersistentStorage {
     
@@ -14,6 +15,9 @@ final class PersistentStorage {
     
     static let shared = PersistentStorage()
     
+    let dataClearPublisher = PassthroughSubject<Void, Never>()
+    let dataInsertPublisher = PassthroughSubject<Void, Never>()
+
     lazy var persistentContainer: NSPersistentContainer = {
         let container = NSPersistentContainer(name: "FZAirMeal")
         container.loadPersistentStores(completionHandler: { (storeDescription, error) in
@@ -41,6 +45,10 @@ final class PersistentStorage {
         return true
     }
     
+    func executeedInsert() {
+        self.dataInsertPublisher.send(())
+    }
+    
     func fetchManagedObject<T: NSManagedObject>(managedObject: T.Type) -> [T]?
     {
         do {
@@ -62,6 +70,8 @@ final class PersistentStorage {
         do {
             try self.context.execute(deleteRequest)
             try self.context.save()
+            self.context.reset()
+            self.context.refreshAllObjects()
         } catch let error as NSError{
             fatalError("Unresolved error \(error), \(error.userInfo)")
         }
@@ -72,12 +82,16 @@ final class PersistentStorage {
          // get all entities and loop over them
          let entityNames = self.persistentContainer.managedObjectModel.entities.map({ $0.name!})
          entityNames.forEach { [weak self] entityName in
+             
             let deleteFetch = NSFetchRequest<NSFetchRequestResult>(entityName: entityName)
             let deleteRequest = NSBatchDeleteRequest(fetchRequest: deleteFetch)
 
             do {
                 try self?.context.execute(deleteRequest)
                 try self?.context.save()
+                self?.context.reset()
+                self?.context.refreshAllObjects()
+                self?.dataClearPublisher.send(())
             } catch let error as NSError{
                 fatalError("Unresolved error \(error), \(error.userInfo)")
             }

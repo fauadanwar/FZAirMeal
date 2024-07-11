@@ -151,6 +151,13 @@ class PairingViewModel: NSObject, ObservableObject
     }
     
     func clearAllData() {
-        orderDataManager.resetCoreData()
+        switch pairingRole {
+        case .host:
+            hostPairingManager.resetAllCoreData()
+        case .peer:
+            peerPairingManager.resetAllCoreData()
+        case .unknown:
+            print("Button should be hidden")
+        }
     }
 }

@@ -20,6 +20,7 @@ class MealViewController: UIViewController {
         super.viewDidLoad()
 
         self.tblMealList.reloadData()
+        mealViewModel.mealViewModelDelegate = self
         if let _ = passenger?.orderId
         {
             barButtonPlaceOrder.title = "Place Order"

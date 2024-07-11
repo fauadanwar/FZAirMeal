@@ -32,6 +32,11 @@ class PeerPairingManager: NSObject {
         hosts.removeAll()
     }
     
+    func resetAllCoreData()
+    {
+        peerRepository.resetAllCoreData()
+    }
+    
     func connectToHost(host: PairingDevice) {
         peerRepository.connectToHost(host: host)
     }

@@ -7,6 +7,7 @@
 
 import Foundation
 import CoreData
+import Combine
 
 protocol PassengerCoreDataRepositoryProtocol: BaseCoreDataRepositoryProtocol where T == Passenger {
     func insertPassengerRecords(records:Array<Passenger>) -> Bool
@@ -24,6 +25,7 @@ protocol PassengerCoreDataRepositoryDelegate: AnyObject
 class PassengerCoreDataRepository: NSObject, PassengerCoreDataRepositoryProtocol {
     typealias T = Passenger
     typealias CDT = CDPassenger
+    private var cancellables = Set<AnyCancellable>()
     weak var passengerCoreDataRepositoryDelegate: PassengerCoreDataRepositoryDelegate?
     
     lazy var passengerDataProvider: PassengerProvider =
@@ -33,14 +35,30 @@ class PassengerCoreDataRepository: NSObject, PassengerCoreDataRepositoryProtocol
         return dataProvider
     }()
     
+    override init() {
+        super.init()
+        PersistentStorage.shared.dataClearPublisher
+            .sink { [weak self] in
+                guard let self = self else { return }
+                passengerDataProvider = PassengerProvider(delegate: self)
+            }
+            .store(in: &cancellables)
+        PersistentStorage.shared.dataInsertPublisher
+            .sink { [weak self] in
+                guard let self = self else { return }
+                passengerDataProvider = PassengerProvider(delegate: self)
+            }
+            .store(in: &cancellables)
+    }
+    
     func batchInsertPassengerRecords(records: Array<Passenger>) -> Bool {
 
         PersistentStorage.shared.persistentContainer.performBackgroundTask { privateManagedContext in
-
             // batch inserts
             let request = self.createBatchInsertRequest(records: records)
             do{
                 try privateManagedContext.execute(request)
+                PersistentStorage.shared.executeedInsert()
             }catch {
                 debugPrint("batch insert error")
             }
