@@ -14,13 +14,14 @@ protocol MealViewModelDelegate: AnyObject
 
 class MealViewModel
 {
-    private let orderDataManager: OrderDataManager
-    private let mealDataManager: MealDataManager
+    private let orderDataManager: OrderDataManagerprotocol
+    private var mealDataManager: MealDataManagerProtocol
     weak var mealViewModelDelegate: MealViewModelDelegate?
 
-    init(orderDataManager: OrderDataManager = OrderDataManager(), mealDataManager: MealDataManager = MealDataManager()) {
+    init(orderDataManager: OrderDataManagerprotocol = OrderDataManager(), mealDataManager: MealDataManagerProtocol = MealDataManager()) {
         self.orderDataManager = orderDataManager
         self.mealDataManager = mealDataManager
+        self.mealDataManager.mealDataManagerDelegate = self
     }
     
     func placeOrder(order: Order) -> Bool {

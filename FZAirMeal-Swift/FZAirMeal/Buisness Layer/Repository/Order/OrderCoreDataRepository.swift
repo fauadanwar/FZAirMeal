@@ -28,9 +28,11 @@ class OrderCoreDataRepository: NSObject, OrderRepositoryProtocol
     typealias CDT = CDOrder
     private var cancellables = Set<AnyCancellable>()
     weak var orderCoreDataRepositoryDelegate: OrderCoreDataRepositoryDelegate?
-    private let cdPassengerDataRepository: PassengerCoreDataRepository = PassengerCoreDataRepository()
-    private let cdMealDataRepository: MealCoreDataRepository = MealCoreDataRepository()
-
+    private let cdPassengerDataRepository: PassengerCoreDataRepository = PassengerCoreDataRepository.shared
+    private let cdMealDataRepository: MealCoreDataRepository = MealCoreDataRepository.shared
+    
+    static let shared = OrderCoreDataRepository()
+    
     lazy var orderDataProvider: OrderProvider =
     {
         let dataProvider = OrderProvider(delegate: self)
@@ -124,15 +126,13 @@ class OrderCoreDataRepository: NSObject, OrderRepositoryProtocol
         cdRecord.id = record.id
         cdRecord.time = record.time
 
-        let _cdMealDataRepository = MealCoreDataRepository()
-        if let cdMeal = _cdMealDataRepository.getCDRecord(byIdentifier: record.mealId)
+        if let cdMeal = cdMealDataRepository.getCDRecord(byIdentifier: record.mealId)
         {
             cdMeal.orderedQuantity -= 1
             cdRecord.toMeal = cdMeal
         }
         
-        let _cdPassengerDataRepository = PassengerCoreDataRepository()
-        if let cdPassenger = _cdPassengerDataRepository.getCDRecord(byIdentifier: record.passengerId)
+        if let cdPassenger = cdPassengerDataRepository.getCDRecord(byIdentifier: record.passengerId)
         {
             cdPassenger.toOrder = cdRecord
             cdRecord.toPassenger = cdPassenger
@@ -149,13 +149,11 @@ class OrderCoreDataRepository: NSObject, OrderRepositoryProtocol
         guard let cdRecord = getCDRecord(byIdentifier: id) else {return false}
         guard let mealId = cdRecord.toMeal?.id else { return false }
         guard let passengerId = cdRecord.toPassenger?.id else { return false }
-        let _cdMealDataRepository = MealCoreDataRepository()
-        if let cdMeal = _cdMealDataRepository.getCDRecord(byIdentifier: mealId)
+        if let cdMeal = cdMealDataRepository.getCDRecord(byIdentifier: mealId)
         {
             cdMeal.orderedQuantity -= 1
         }
-        let _cdPassengerDataRepository = PassengerCoreDataRepository()
-        if let cdPassenger = _cdPassengerDataRepository.getCDRecord(byIdentifier: passengerId)
+        if let cdPassenger = cdPassengerDataRepository.getCDRecord(byIdentifier: passengerId)
         {
             cdPassenger.toOrder = nil
         }

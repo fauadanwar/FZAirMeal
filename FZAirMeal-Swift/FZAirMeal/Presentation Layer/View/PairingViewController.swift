@@ -145,6 +145,7 @@ class PairingViewController: UIViewController {
     */
 
 }
+
 extension PairingViewController : UITableViewDelegate, UITableViewDataSource
 {
     func numberOfSections(in tableView: UITableView) -> Int {

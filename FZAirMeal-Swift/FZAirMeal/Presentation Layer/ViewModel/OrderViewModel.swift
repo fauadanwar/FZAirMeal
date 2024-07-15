@@ -14,8 +14,13 @@ protocol OrderViewModelDelegate: AnyObject
 
 class OrderViewModel
 {
-    private let orderDataManager = OrderDataManager()
+    private var orderDataManager: OrderDataManagerprotocol
     weak var orderViewModelDelegate: OrderViewModelDelegate?
+    
+    init(orderDataManager: OrderDataManagerprotocol = OrderDataManager()) {
+        self.orderDataManager = orderDataManager
+        self.orderDataManager.orderDataManagerDelegate = self
+    }
     
     func getOrderAt(indexPath: IndexPath) -> Order? {
         return orderDataManager.getOrderAt(indexPath: indexPath)

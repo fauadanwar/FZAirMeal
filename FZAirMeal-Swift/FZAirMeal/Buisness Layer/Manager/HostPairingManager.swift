@@ -8,11 +8,24 @@
 import Foundation
 import MultipeerConnectivity
 
-class HostPairingManager: NSObject, ObservableObject {
+protocol HostPairingManagerProtocol {
+    var hostPairingManagerDelegate: HostPairingManagerDelegate? { get set }
+    func startHosting()
+    func stopHosting()
+    func resetAllCoreData()
+    func resetState()
+    func sendData<T: Record>(_ object: T, type: SendDataType, toPeer: PairingDevice) -> Bool
+    func brodcastData<T: Record>(_ object: T, type: SendDataType) -> Bool
+    func grantPermisson(pairingDevice: PairingDevice, permission: Bool)
+}
+
+protocol HostPairingManagerDelegate: AnyObject{
+    func didReceivePairingRequest(pairingDevice: PairingDevice)
+}
+
+class HostPairingManager: NSObject, HostPairingManagerProtocol {
     var hostRepository: HostPairingRepositoryProtocol
-    
-    @Published var requetingPairingDevice: PairingDevice?
-    @Published var joinedPeer: [PairingDevice] = []
+    weak var hostPairingManagerDelegate: HostPairingManagerDelegate?
     
     init(hostRepository: HostPairingRepositoryProtocol = HostPairingRepository()) {
         self.hostRepository = hostRepository
@@ -35,10 +48,8 @@ class HostPairingManager: NSObject, ObservableObject {
     
     func resetState() {
         hostRepository.resetState()
-        requetingPairingDevice = nil
-        joinedPeer.removeAll()
     }
-
+    
     func sendData<T: Record>(_ object: T, type: SendDataType, toPeer: PairingDevice) -> Bool {
         return hostRepository.sendData(object, type: type, toPeer: toPeer)
     }
@@ -46,23 +57,14 @@ class HostPairingManager: NSObject, ObservableObject {
     func brodcastData<T: Record>(_ object: T, type: SendDataType) -> Bool {
         return hostRepository.brodcastData(object, type: type)
     }
+    
+    func grantPermisson(pairingDevice: PairingDevice, permission: Bool) {
+        hostRepository.grantPermisson(pairingDevice: pairingDevice, permission: permission)
+    }
 }
 
 extension HostPairingManager: HostPairingRepositoryDelegate {
     func didReceivePairingRequest(pairingDevice: PairingDevice) {
-        DispatchQueue.main.async { [weak self] in
-            guard let self else { return }
-            requetingPairingDevice = pairingDevice
-        }
-    }
-    
-    func grantPermisson(pairingDevice: PairingDevice, permission: Bool) {
-        hostRepository.grantPermisson(pairingDevice: pairingDevice, permission: permission)
-        if permission {
-            DispatchQueue.main.async { [weak self] in
-                guard let self else { return }
-                joinedPeer.append(pairingDevice)
-            }
-        }
+        hostPairingManagerDelegate?.didReceivePairingRequest(pairingDevice: pairingDevice)
     }
 }

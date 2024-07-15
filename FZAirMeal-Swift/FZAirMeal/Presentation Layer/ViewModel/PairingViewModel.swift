@@ -16,11 +16,29 @@ enum PairingRole {
 
 class PairingViewModel: NSObject, ObservableObject
 {
-    var mealManager = MealDataManager()
-    var passengerManager = PassengerDataManager()
-    var orderDataManager = OrderDataManager()
-    var peerPairingManager = PeerPairingManager()
-    var hostPairingManager = HostPairingManager()
+    var mealManager: MealDataManagerProtocol
+    var passengerManager: PassengerDataManagerprotocol
+    var orderDataManager: OrderDataManagerprotocol
+    var peerPairingManager: PeerPairingManagerProtocol
+    var hostPairingManager: HostPairingManagerProtocol
+    
+    init(mealManager: MealDataManagerProtocol = MealDataManager(),
+         passengerManager: PassengerDataManagerprotocol = PassengerDataManager(),
+         orderDataManager: OrderDataManagerprotocol = OrderDataManager(),
+         peerPairingManager: PeerPairingManagerProtocol = PeerPairingManager(),
+         hostPairingManager: HostPairingManagerProtocol = HostPairingManager()) 
+    {
+        self.mealManager = mealManager
+        self.passengerManager = passengerManager
+        self.orderDataManager = orderDataManager
+        self.peerPairingManager = peerPairingManager
+        self.hostPairingManager = hostPairingManager
+        
+        super.init()
+
+        self.peerPairingManager.peerPairingManagerDelegate = self
+        self.hostPairingManager.hostPairingManagerDelegate = self
+    }
     
     @Published var ifFetchingData: Bool = false
     
@@ -73,35 +91,14 @@ class PairingViewModel: NSObject, ObservableObject
     
     var subscriptions = Set<AnyCancellable>()
     
-    override init() {
-        super.init()
-        hostPairingManager.$requetingPairingDevice
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] pairingDevice in
-                guard let self, let pairingDevice else { return }
-                self.requetingPairingDevice = pairingDevice
-            }
-            .store(in: &subscriptions)
-        
-        peerPairingManager.$hosts
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] hosts in
-                guard let self else { return }
-                self.availabelHosts = hosts
-            }
-            .store(in: &subscriptions)
-        
-        hostPairingManager.$joinedPeer
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] joinedPeer in
-                guard let self else { return }
-                self.joinedPeer = joinedPeer
-            }
-            .store(in: &subscriptions)
-    }
-    
     func grantPermisson(requetingPairingDevice: PairingDevice, permission: Bool) {
         hostPairingManager.grantPermisson(pairingDevice: requetingPairingDevice, permission: permission)
+        if permission {
+            DispatchQueue.main.async { [weak self] in
+                guard let self else { return }
+                joinedPeer.append(requetingPairingDevice)
+            }
+        }
     }
     
     func fetchData(ofType type: SendDataType) {
@@ -158,6 +155,36 @@ class PairingViewModel: NSObject, ObservableObject
             peerPairingManager.resetAllCoreData()
         case .unknown:
             print("Button should be hidden")
+        }
+    }
+}
+
+extension PairingViewModel: HostPairingManagerDelegate {
+    func didReceivePairingRequest(pairingDevice: PairingDevice) {
+        DispatchQueue.main.async { [weak self] in
+            guard let self else { return }
+            requetingPairingDevice = pairingDevice
+        }
+    }
+}
+
+extension PairingViewModel: PeerPairingManagerDelegate {
+    func foundHost(host: PairingDevice) {
+        DispatchQueue.main.async { [weak self] in
+            guard let self else { return }
+            if availabelHosts.contains(host) {
+                return
+            }
+            availabelHosts.append(host)
+        }
+    }
+    
+    func lostHost(host: PairingDevice) {
+        DispatchQueue.main.async { [weak self] in
+            guard let self else { return }
+            if let index = availabelHosts.firstIndex(of: host) {
+                availabelHosts.remove(at: index)
+            }
         }
     }
 }

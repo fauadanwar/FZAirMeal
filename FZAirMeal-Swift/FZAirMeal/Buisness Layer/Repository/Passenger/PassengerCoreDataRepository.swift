@@ -30,12 +30,13 @@ class PassengerCoreDataRepository: NSObject, PassengerCoreDataRepositoryProtocol
     
     lazy var passengerDataProvider: PassengerProvider =
     {
-        PersistentStorage.shared.printDocumentDirectoryPath()
         let dataProvider = PassengerProvider(delegate: self)
         return dataProvider
     }()
     
-    override init() {
+    static let shared = PassengerCoreDataRepository()
+    
+    private override init() {
         super.init()
         PersistentStorage.shared.dataClearPublisher
             .sink { [weak self] in

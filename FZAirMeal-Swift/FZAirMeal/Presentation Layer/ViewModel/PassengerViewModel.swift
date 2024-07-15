@@ -15,11 +15,12 @@ protocol PassengerViewModelDelegate: AnyObject
 
 class PassengerViewModel{
     
-    var passengerManager: PassengerDataManager
+    var passengerManager: PassengerDataManagerprotocol
     weak var passengerViewModelDelegate: PassengerViewModelDelegate?
     
-    init(passengerManager: PassengerDataManager = PassengerDataManager()) {
+    init(passengerManager: PassengerDataManagerprotocol = PassengerDataManager()) {
         self.passengerManager = passengerManager
+        self.passengerManager.passengerDataManagerDelegate = self
     }
     
     func getPassengersAt(indexPath: IndexPath) -> Passenger? {

@@ -8,17 +8,32 @@
 import Foundation
 import CoreData
 
+protocol OrderDataManagerprotocol
+{
+    var orderDataManagerDelegate: OrderDataManagerDelegate? { get set }
+    func create(record: Order) -> Bool
+    func deleteOrder(byIdentifier id: String) -> Bool
+    func updateOrder(record: Order) -> Bool
+    func resetCoreData()
+    func getOrderRecord(completionHandler:@escaping(_ result: Array<Order>?)-> Void)
+    func getOrderRecordForPeer(completionHandler:@escaping(_ result: Array<Order>?)-> Void)
+    func getOrdersCount() -> Int
+    func getOrderAt(indexPath: IndexPath) -> Order?
+    func getPassengerMealAndOrderAt(indexPath: IndexPath) -> (Passenger?, Meal?, Order?)
+    func getOrderWith(orderid: String) -> Order?
+}
+
 protocol OrderDataManagerDelegate: AnyObject
 {
     func orderDataUpdated()
 }
 
-class OrderDataManager
+class OrderDataManager: OrderDataManagerprotocol
 {
     private let _cdOrderRepository : any OrderRepositoryProtocol
     weak var orderDataManagerDelegate: OrderDataManagerDelegate?
 
-    init(_cdOrderRepository: any OrderRepositoryProtocol = OrderCoreDataRepository()) {
+    init(_cdOrderRepository: any OrderRepositoryProtocol = OrderCoreDataRepository.shared) {
         self._cdOrderRepository = _cdOrderRepository
     }
     

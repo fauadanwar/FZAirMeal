@@ -8,10 +8,24 @@
 import Foundation
 import MultipeerConnectivity
 
+protocol PeerPairingManagerProtocol {
+    var peerPairingManagerDelegate: PeerPairingManagerDelegate? { get set }
+    func startBrowsing()
+    func stopBrowsing()
+    func resetState()
+    func resetAllCoreData()
+    func connectToHost(host: PairingDevice)
+    func sendOrder(order: Order, type: SendDataType, toHost: PairingDevice) -> Bool
+}
 
-class PeerPairingManager: NSObject {
+protocol PeerPairingManagerDelegate: AnyObject {
+    func foundHost(host: PairingDevice)
+    func lostHost(host: PairingDevice)
+}
+
+class PeerPairingManager: NSObject, PeerPairingManagerProtocol {
     var peerRepository: PeerPairingRepositoryProtocol
-    @Published var hosts: [PairingDevice] = []
+    weak var peerPairingManagerDelegate: PeerPairingManagerDelegate?
 
     init(peerRepository: PeerPairingRepositoryProtocol = PeerPairingRepository()) {
         self.peerRepository = peerRepository
@@ -29,7 +43,6 @@ class PeerPairingManager: NSObject {
     
     func resetState() {
         peerRepository.resetState()
-        hosts.removeAll()
     }
     
     func resetAllCoreData()
@@ -49,15 +62,10 @@ class PeerPairingManager: NSObject {
 
 extension PeerPairingManager: PeerPairingRepositoryDelegate {
     func foundHost(host: PairingDevice) {
-        if hosts.contains(host) {
-            return
-        }
-        hosts.append(host)
+        peerPairingManagerDelegate?.foundHost(host: host)
     }
     
     func lostHost(host: PairingDevice) {
-        if let index = hosts.firstIndex(of: host) {
-            hosts.remove(at: index)
-        }
+        peerPairingManagerDelegate?.lostHost(host: host)
     }
 }

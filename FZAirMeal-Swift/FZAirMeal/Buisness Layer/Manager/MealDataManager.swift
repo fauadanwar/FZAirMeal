@@ -7,18 +7,31 @@
 
 import Foundation
 
+protocol MealDataManagerProtocol {
+    var mealDataManagerDelegate: MealDataManagerDelegate? { get set }
+    func getMealRecord(completionHandler:@escaping(_ result: Array<Meal>?)-> Void)
+    func getMealRecordForPeer(completionHandler:@escaping(_ result: Array<Meal>?)-> Void)
+    func getMealRecordForHost(completionHandler:@escaping(_ result: Array<Meal>?)-> Void)
+    func getMealsCount() -> Int
+    func getMealAt(indexPath: IndexPath) -> Meal?
+    func getMealWith(mealid: String) -> Meal?
+    func deleteMeal(byIdentifier id: String) -> Bool
+    func updateMeal(record: Meal) -> Bool
+    func resetCoreData()
+}
+
 protocol MealDataManagerDelegate: AnyObject
 {
     func mealDataUpdated()
 }
 
-class MealDataManager {
+class MealDataManager: MealDataManagerProtocol {
 
     private let _cdMealDataRepository: any MealCoreDataRepositoryProtocol
     private let _mealResourceRepository: any MealResourceRepositoryProtocol
     weak var mealDataManagerDelegate: MealDataManagerDelegate?
 
-    init(_cdMealDataRepository: any MealCoreDataRepositoryProtocol = MealCoreDataRepository(), _mealResourceRepository: any MealResourceRepositoryProtocol = MealResourceRepository()) {
+    init(_cdMealDataRepository: any MealCoreDataRepositoryProtocol = MealCoreDataRepository.shared, _mealResourceRepository: any MealResourceRepositoryProtocol = MealResourceRepository()) {
         self._cdMealDataRepository = _cdMealDataRepository
         self._mealResourceRepository = _mealResourceRepository
     }

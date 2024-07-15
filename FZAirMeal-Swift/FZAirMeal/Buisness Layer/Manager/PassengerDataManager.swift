@@ -7,18 +7,32 @@
 
 import Foundation
 
+protocol PassengerDataManagerprotocol {
+    var passengerDataManagerDelegate: PassengerDataManagerDelegate? { get set }
+    func getPassengerRecord(completionHandler:@escaping(_ result: Array<Passenger>?)-> Void)
+    func getPassengerRecordForHost(completionHandler:@escaping(_ result: Array<Passenger>?)-> Void)
+    func getPassengerRecordForPeer(completionHandler:@escaping(_ result: Array<Passenger>?)-> Void)
+    func getPassengerAt(indexPath: IndexPath) -> Passenger?
+    func getPassengerWith(passengerId: String) -> Passenger?
+    func getPassengerAndMealAt(indexPath: IndexPath) -> (Passenger?, Meal?)
+    func getPassengerCount() -> Int
+    func deletePassenger(byIdentifier id: String) -> Bool
+    func updatePassenger(record: Passenger) -> Bool
+    func resetCoreData()
+}
+
 protocol PassengerDataManagerDelegate: AnyObject
 {
     func passengerDataUpdated()
 }
 
-class PassengerDataManager {
+class PassengerDataManager: PassengerDataManagerprotocol {
 
     private let _cdPassengerDataRepository : any PassengerCoreDataRepositoryProtocol
     private let _passengerResourceRepository: any PassengerResourceRepositoryProtocol
     weak var passengerDataManagerDelegate: PassengerDataManagerDelegate?
     
-    init(_cdPassengerDataRepository: any PassengerCoreDataRepositoryProtocol = PassengerCoreDataRepository(),
+    init(_cdPassengerDataRepository: any PassengerCoreDataRepositoryProtocol = PassengerCoreDataRepository.shared,
          _passengerResourceRepository: any PassengerResourceRepositoryProtocol = PassengerResourceRepository())
     {
         self._cdPassengerDataRepository = _cdPassengerDataRepository

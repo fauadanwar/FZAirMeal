@@ -11,7 +11,7 @@ import Combine
 
 final class PersistentStorage {
     
-    init() {}
+    private init() {}
     
     static let shared = PersistentStorage()
     
