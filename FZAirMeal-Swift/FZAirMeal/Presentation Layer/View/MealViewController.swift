@@ -30,6 +30,11 @@ class MealViewController: UIViewController {
         }
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.tblMealList.reloadData()
+    }
+    
     @IBAction func placeOrderButtonTapped(_ sender: Any) {
         
         if let indexPath = self.tblMealList.indexPathForSelectedRow,
@@ -86,7 +91,8 @@ extension MealViewController : UITableViewDelegate, UITableViewDataSource
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        mealViewModel.getMealsCount()
+        print("meal count: \( mealViewModel.getMealsCount())")
+        return mealViewModel.getMealsCount()
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {

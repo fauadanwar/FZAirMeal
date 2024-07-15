@@ -11,14 +11,16 @@ import CoreData
 class OrderViewController: UIViewController {
 
     @IBOutlet weak var tblOrderList: UITableView!
-
-
     private let orderViewModel = OrderViewModel()
 
     override func viewDidLoad() {
         super.viewDidLoad()
         self.tblOrderList.reloadData()
         orderViewModel.orderViewModelDelegate = self
+    }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.tblOrderList.reloadData()
     }
 }
 
@@ -29,7 +31,8 @@ extension OrderViewController : UITableViewDelegate, UITableViewDataSource
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        orderViewModel.getOrdersCount()
+        print("order count: \(orderViewModel.getOrdersCount())")
+       return orderViewModel.getOrdersCount()
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {

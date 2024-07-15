@@ -39,11 +39,11 @@ class MealCoreDataRepository: NSObject, MealCoreDataRepositoryProtocol {
     override init() {
         super.init()
         PersistentStorage.shared.dataClearPublisher
-                   .sink { [weak self] in
-                       guard let self = self else { return }
-                       mealDataProvider = MealProvider(delegate: self)
-                   }
-                   .store(in: &cancellables)
+            .sink { [weak self] in
+                guard let self = self else { return }
+                mealDataProvider = MealProvider(delegate: self)
+            }
+            .store(in: &cancellables)
         PersistentStorage.shared.dataInsertPublisher
             .sink { [weak self] in
                 guard let self = self else { return }
