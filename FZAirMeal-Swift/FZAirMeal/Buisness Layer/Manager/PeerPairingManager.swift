@@ -27,7 +27,7 @@ class PeerPairingManager: NSObject, PeerPairingManagerProtocol {
     var peerRepository: PeerPairingRepositoryProtocol
     weak var peerPairingManagerDelegate: PeerPairingManagerDelegate?
 
-    init(peerRepository: PeerPairingRepositoryProtocol = PeerPairingRepository()) {
+    init(peerRepository: PeerPairingRepositoryProtocol = PeerPairingRepository.shared) {
         self.peerRepository = peerRepository
         super.init()
         self.peerRepository.peerPairingRepositoryDelegate = self

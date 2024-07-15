@@ -33,7 +33,7 @@ class PassengerDataManager: PassengerDataManagerprotocol {
     weak var passengerDataManagerDelegate: PassengerDataManagerDelegate?
     
     init(_cdPassengerDataRepository: any PassengerCoreDataRepositoryProtocol = PassengerCoreDataRepository.shared,
-         _passengerResourceRepository: any PassengerResourceRepositoryProtocol = PassengerResourceRepository())
+         _passengerResourceRepository: any PassengerResourceRepositoryProtocol = PassengerResourceRepository.shared)
     {
         self._cdPassengerDataRepository = _cdPassengerDataRepository
         self._passengerResourceRepository = _passengerResourceRepository

@@ -31,7 +31,7 @@ class MealDataManager: MealDataManagerProtocol {
     private let _mealResourceRepository: any MealResourceRepositoryProtocol
     weak var mealDataManagerDelegate: MealDataManagerDelegate?
 
-    init(_cdMealDataRepository: any MealCoreDataRepositoryProtocol = MealCoreDataRepository.shared, _mealResourceRepository: any MealResourceRepositoryProtocol = MealResourceRepository()) {
+    init(_cdMealDataRepository: any MealCoreDataRepositoryProtocol = MealCoreDataRepository.shared, _mealResourceRepository: any MealResourceRepositoryProtocol = MealResourceRepository.shared) {
         self._cdMealDataRepository = _cdMealDataRepository
         self._mealResourceRepository = _mealResourceRepository
     }

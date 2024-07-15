@@ -14,4 +14,7 @@ struct MealResourceRepository : MealResourceRepositoryProtocol {
     var resourceURL: URL = ApiResource.mealResource
     var fileName: String = "Meals"
     typealias T = Meal
+    
+    static let shared = MealResourceRepository()
+    private init() {}
 }

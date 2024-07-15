@@ -31,7 +31,9 @@ class HostPairingRepository: NSObject, HostPairingRepositoryProtocol {
     private var pairingRequest: PairingRequest?
     @Published var joinedPeer: [PairingDevice] = []
 
-    override init() {
+    static let shared = HostPairingRepository()
+    
+    private override init() {
         let peer = MCPeerID(displayName: UIDevice.current.name)
         session = MCSession(peer: peer)
         advertiser = MCNearbyServiceAdvertiser(peer: peer, discoveryInfo: nil, serviceType: serviceType)

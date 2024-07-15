@@ -36,7 +36,7 @@ class MealCoreDataRepository: NSObject, MealCoreDataRepositoryProtocol {
     
     static let shared = MealCoreDataRepository()
 
-    override init() {
+    private override init() {
         super.init()
         PersistentStorage.shared.dataClearPublisher
             .sink { [weak self] in

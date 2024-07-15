@@ -39,7 +39,7 @@ class OrderCoreDataRepository: NSObject, OrderRepositoryProtocol
         return dataProvider
     }()
     
-    override init() {
+    private override init() {
         super.init()
         PersistentStorage.shared.dataClearPublisher
             .sink { [weak self] in

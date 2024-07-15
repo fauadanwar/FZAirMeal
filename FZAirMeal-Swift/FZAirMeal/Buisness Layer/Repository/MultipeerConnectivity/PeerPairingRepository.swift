@@ -29,7 +29,9 @@ class PeerPairingRepository: NSObject, PeerPairingRepositoryProtocol {
     weak var peerPairingRepositoryDelegate: PeerPairingRepositoryDelegate?
     @Published var hosts: [PairingDevice] = []
     
-    override init() {
+    static let shared = PeerPairingRepository()
+
+    private override init() {
         let peer = MCPeerID(displayName: UIDevice.current.name)
         session = MCSession(peer: peer)
         browser = MCNearbyServiceBrowser(peer: peer, serviceType: serviceType)

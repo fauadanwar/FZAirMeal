@@ -14,4 +14,7 @@ struct PassengerResourceRepository : PassengerResourceRepositoryProtocol {
     var resourceURL: URL = ApiResource.passengerResource
     var fileName: String = "Passengers"
     typealias T = Passenger
+    
+    static let shared = PassengerResourceRepository()
+    private init() {}
 }

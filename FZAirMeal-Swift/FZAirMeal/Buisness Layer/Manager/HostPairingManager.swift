@@ -27,7 +27,7 @@ class HostPairingManager: NSObject, HostPairingManagerProtocol {
     var hostRepository: HostPairingRepositoryProtocol
     weak var hostPairingManagerDelegate: HostPairingManagerDelegate?
     
-    init(hostRepository: HostPairingRepositoryProtocol = HostPairingRepository()) {
+    init(hostRepository: HostPairingRepositoryProtocol = HostPairingRepository.shared) {
         self.hostRepository = hostRepository
         super.init()
         self.hostRepository.hostPairingRepositoryDelegate = self
