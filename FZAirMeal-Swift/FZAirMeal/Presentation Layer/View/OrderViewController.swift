@@ -55,6 +55,11 @@ class OrderViewController: UIViewController {
         let alert = UIAlertController(title: "Alert", message: message, preferredStyle: .alert)
         let okAction = UIAlertAction(title: "Ok", style: .default, handler: nil)
         alert.addAction(okAction)
+        if (UIDevice.current.userInterfaceIdiom == .pad) {
+            if let presenter = alert.popoverPresentationController {
+                presenter.barButtonItem = barButtonCancelOrder
+            }
+        }
         self.present(alert, animated: true)
     }
 }

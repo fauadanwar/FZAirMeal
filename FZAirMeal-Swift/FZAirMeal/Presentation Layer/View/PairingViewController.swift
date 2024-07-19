@@ -96,6 +96,11 @@ class PairingViewController: UIViewController {
             ConnectivityData.shared.pairingRole = .peer
         }))
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        if (UIDevice.current.userInterfaceIdiom == .pad) {
+            if let presenter = alert.popoverPresentationController {
+                presenter.barButtonItem = activityButton
+            }
+        }
         present(alert, animated: true, completion: nil)
     }
     

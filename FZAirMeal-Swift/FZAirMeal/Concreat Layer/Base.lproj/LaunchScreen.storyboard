@@ -23,10 +23,25 @@
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
+                            <constraint firstItem="na8-sD-I7F" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="10" id="2ac-if-BSl"/>
                             <constraint firstItem="na8-sD-I7F" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" constant="-20" id="8Ru-3s-KRz"/>
                             <constraint firstItem="na8-sD-I7F" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="BYr-Dh-dZ2"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="na8-sD-I7F" secondAttribute="trailing" constant="10" id="fEf-sW-wZW"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="na8-sD-I7F" secondAttribute="bottom" id="fHn-i8-Kkh"/>
                         </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="fEf-sW-wZW"/>
+                                <exclude reference="2ac-if-BSl"/>
+                            </mask>
+                        </variation>
+                        <variation key="heightClass=regular-widthClass=regular">
+                            <mask key="constraints">
+                                <include reference="fEf-sW-wZW"/>
+                                <exclude reference="8Ru-3s-KRz"/>
+                                <include reference="2ac-if-BSl"/>
+                            </mask>
+                        </variation>
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="iYj-Kq-Ea1" userLabel="First Responder" sceneMemberID="firstResponder"/>
