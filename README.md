@@ -1,25 +1,30 @@
+
 # FZAirMeal
-FZAirMeal application is POC for meal ordering by using Apple's Multi-peer connectivity framework.<br />
-Details documentation of case study: https://docs.google.com/document/d/1ZbVjy8rZb3_XCzA05dnZeMYzEHVSffeRITkenvKjK4c/edit?usp=sharing
+FZAirMeal is a Proof of Concept (POC) application for meal ordering, leveraging Apple's Multi-peer connectivity framework.<br>
+## Case Study Documentation: 
+For detailed documentation, refer to the [case study](https://docs.google.com/document/d/1ZbVjy8rZb3_XCzA05dnZeMYzEHVSffeRITkenvKjK4c/edit?usp=sharing).
 
 <br><br>
 # Technologies Used:
 - MVVM based architecture.
-- SOLID principles with Protocol oriented programming and Dependency injection.
-- Provider and repository, singleton and delegation design patterns.
-- Multipeer connectivity framework used to enstablish connection between Host and perr devices.
-- CoreData framework used to store data.
-- Swift programming language with combine framework and UIKit.
-- Used layer architecture to separate Presentation layer from Buisness layer.
-
+- SOLID principles with Protocol Oriented Programming and Dependency Injection.
+- Provider, Repository, Singleton and Delegation design patterns.
+- Multipeer connectivity framework for establishing connections between host and peer devices.
+- CoreData framework for data storage.
+- Swift programming language with Combine framework and UIKit.
+- Layered architecture to separate Presentation layer from Business layer.
+  
+<br><br>
+# Key Functionalities
 <br><br>
 ## Connecting Host and Peers
 https://github.com/user-attachments/assets/2389f8bc-c75f-4e9f-9e53-987da1be4398
 
 <br><br>
 ## Fetching Data
-- Host Fetch data from API (For POC Currently getting data from JSON file once API return failure error)
-- Peers fetch data from Host using local network.
+- Host fetches data from an API (Currently retrieves data from a JSON file in case of API failure).
+- Peers fetch data from the Host using the local network.
+  
 https://github.com/user-attachments/assets/9bca2384-ccba-4c54-89a7-d5a0322c7616
 
 <br><br>
@@ -45,15 +50,15 @@ https://github.com/user-attachments/assets/e17dd8ed-9b48-455d-8381-70a490b4ed6b
 <br><br>
 ## Future implementations
 - Error handling:
-  - Curruntly all error mesages are getting logged in console.
-  - The error messages should get shown to user as an alert.
-  - Also error message should get logged locally using file or database.
-  - Peer will share logs with host and host will upload log on server.
+  - Currently, all error messages are logged in the console.
+  - Error messages should be shown to users as alerts.
+  - Errors should also be logged locally using a file or database.
+  - Peers will share logs with the host, and the host will upload logs to the server.
 - Order options:
-  - User should be able to add more then 1 meal for passenger in order.
-  - Order sholud get stored locally in case of connection issue and sync later after reconnecting.
+  - Users should be able to add more than one meal per passenger in an order.
+  - Orders should be stored locally in case of connection issues and synced later after reconnecting.
 - Online support:
-  - Add option to configure server url, so host can fetch data from online server.
-  - Add support for logs/error message upload.
+  - Add an option to configure the server URL so the host can fetch data from an online server.
+  - Add support for logs/error message uploads.
 
  
