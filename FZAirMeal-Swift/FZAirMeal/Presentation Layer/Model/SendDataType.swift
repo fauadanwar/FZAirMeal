@@ -11,16 +11,28 @@ enum SendDataType: String, Codable {
     case orders
     case passengers
     case meals
+    case order
+    case deleteOrder
 }
 
 struct DataWrapper: Codable {
     let type: SendDataType
-    let data: Data
+    let data: Data?
 }
 
 extension DataWrapper {
     init<T: Record>(type: SendDataType, object: T) throws {
         self.type = type
         self.data = try JSONEncoder().encode(object)
+    }
+    
+    init<T: Record>(type: SendDataType, objects: [T]) throws {
+        self.type = type
+        self.data = try JSONEncoder().encode(objects)
+    }
+    
+    init(type: SendDataType) {
+        self.type = type
+        self.data = nil
     }
 }

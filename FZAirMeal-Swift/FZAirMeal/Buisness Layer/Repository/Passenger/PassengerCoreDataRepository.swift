@@ -9,8 +9,8 @@ import Foundation
 import CoreData
 import Combine
 
-protocol PassengerCoreDataRepositoryProtocol: BaseCoreDataRepositoryProtocol where T == Passenger {
-    func insertPassengerRecords(records:Array<Passenger>) -> Bool
+protocol PassengerCoreDataRepositoryProtocol: BaseCoreDataRepositoryProtocol where T == Passenger, CDT == CDPassenger {
+    var passengerCoreDataRepositoryDelegate: PassengerCoreDataRepositoryDelegate? { get set }
     func batchInsertPassengerRecords(records:Array<Passenger>) -> Bool
     func getPassengersAt(indexPath: IndexPath) -> Passenger?
     func getPassengerAndMealAt(indexPath: IndexPath) ->  (Passenger?, Meal?)
@@ -64,9 +64,7 @@ class PassengerCoreDataRepository: NSObject, PassengerCoreDataRepositoryProtocol
                 debugPrint("batch insert error")
             }
         }
-
         return true
-
     }
 
     private func createBatchInsertRequest(records:Array<Passenger>) -> NSBatchInsertRequest {
@@ -91,28 +89,6 @@ class PassengerCoreDataRepository: NSObject, PassengerCoreDataRepositoryProtocol
 
         return batchInsert
 
-    }
-
-    func insertPassengerRecords(records: Array<Passenger>) -> Bool {
-
-        debugPrint("PassengerDataRepository: Insert record operation is starting")
-
-        PersistentStorage.shared.persistentContainer.performBackgroundTask { privateManagedContext in
-            //insert code
-            records.forEach { passengerRecord in
-                let cdPassenger = CDPassenger(context: privateManagedContext)
-                cdPassenger.id = passengerRecord.id
-                cdPassenger.name = passengerRecord.name
-                cdPassenger.seatNumber = passengerRecord.seatNumber
-            }
-
-            if(privateManagedContext.hasChanges){
-                try? privateManagedContext.save()
-                debugPrint("PassengerDataRepository: Insert record operation is completed")
-            }
-        }
-
-        return true
     }
     
     func getPassengersAt(indexPath: IndexPath) -> Passenger? {

@@ -9,8 +9,8 @@ import Foundation
 import CoreData
 import Combine
 
-protocol MealCoreDataRepositoryProtocol: BaseCoreDataRepositoryProtocol where T == Meal {
-    func insertMealRecords(records:Array<Meal>) -> Bool
+protocol MealCoreDataRepositoryProtocol: BaseCoreDataRepositoryProtocol where T == Meal, CDT == CDMeal {
+    var mealCoreDataRepositoryDelegate: MealCoreDataRepositoryDelegate? { get set }
     func batchInsertMealRecords(records:Array<Meal>) -> Bool
     func getMealAt(indexPath: IndexPath) -> Meal?
     func getMealsCount() -> Int
@@ -94,32 +94,6 @@ class MealCoreDataRepository: NSObject, MealCoreDataRepositoryProtocol {
 
         return batchInsert
 
-    }
-
-    func insertMealRecords(records: Array<Meal>) -> Bool {
-
-        debugPrint("MealDataRepository: Insert record operation is starting")
-
-        PersistentStorage.shared.persistentContainer.performBackgroundTask { privateManagedContext in
-            //insert code
-            records.forEach { mealRecord in
-                let cdMeal = CDMeal(context: privateManagedContext)
-                cdMeal.id = mealRecord.id
-                cdMeal.name = mealRecord.name
-                cdMeal.details = mealRecord.details
-                cdMeal.cost = mealRecord.cost
-                cdMeal.quantity = Int16(mealRecord.quantity)
-                cdMeal.orderedQuantity = Int16(mealRecord.orderedQuantity)
-
-            }
-
-            if(privateManagedContext.hasChanges){
-                try? privateManagedContext.save()
-                debugPrint("MealDataRepository: Insert record operation is completed")
-            }
-        }
-
-        return true
     }
     
     func updateProperties(record: Meal, cdRecord: CDMeal) {

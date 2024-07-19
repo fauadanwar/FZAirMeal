@@ -12,7 +12,7 @@ class PassengerViewController: UIViewController {
 
     @IBOutlet weak var tblPassengerList: UITableView!
 
-    private let passengerViewModel = PassengerViewModel()
+    private var passengerViewModel: PassengerViewModelProtocol = PassengerViewModel()
 
     override func viewDidLoad() {
         super.viewDidLoad()

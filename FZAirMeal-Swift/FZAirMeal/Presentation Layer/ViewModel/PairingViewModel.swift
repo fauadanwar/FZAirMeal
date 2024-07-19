@@ -8,139 +8,126 @@
 import Foundation
 import Combine
 
-enum PairingRole {
-    case host
-    case peer
-    case unknown
+protocol PairingViewModelProtocol {
+    func grantPermisson(requetingPairingDevice: PairingDevice, permission: Bool)
+    func clearAllData()
+    func fetchData(ofType type: SendDataType)
 }
 
-class PairingViewModel: NSObject, ObservableObject
+class PairingViewModel: NSObject, ObservableObject, PairingViewModelProtocol
 {
-    var mealManager: MealDataManagerProtocol
-    var passengerManager: PassengerDataManagerprotocol
-    var orderDataManager: OrderDataManagerprotocol
-    var peerPairingManager: PeerPairingManagerProtocol
-    var hostPairingManager: HostPairingManagerProtocol
+    private var mealManager: MealDataManagerProtocol
+    private var passengerManager: PassengerDataManagerProtocol
+    private var orderDataManager: OrderDataManagerProtocol
+    private var peerConnectionManager: PeerConnectionManagerProtocol
+    private var hostConnectionManager: HostConnectionManagerProtocol
+        
+    var subscriptions = Set<AnyCancellable>()
     
     init(mealManager: MealDataManagerProtocol = MealDataManager(),
-         passengerManager: PassengerDataManagerprotocol = PassengerDataManager(),
-         orderDataManager: OrderDataManagerprotocol = OrderDataManager(),
-         peerPairingManager: PeerPairingManagerProtocol = PeerPairingManager(),
-         hostPairingManager: HostPairingManagerProtocol = HostPairingManager()) 
+         passengerManager: PassengerDataManagerProtocol = PassengerDataManager(),
+         orderDataManager: OrderDataManagerProtocol = OrderDataManager(),
+         peerConnectionManager: PeerConnectionManagerProtocol = PeerConnectionManager(),
+         hostConnectionManager: HostConnectionManagerProtocol = HostConnectionManager())
     {
         self.mealManager = mealManager
         self.passengerManager = passengerManager
         self.orderDataManager = orderDataManager
-        self.peerPairingManager = peerPairingManager
-        self.hostPairingManager = hostPairingManager
+        self.peerConnectionManager = peerConnectionManager
+        self.hostConnectionManager = hostConnectionManager
         
         super.init()
 
-        self.peerPairingManager.peerPairingManagerDelegate = self
-        self.hostPairingManager.hostPairingManagerDelegate = self
-    }
-    
-    @Published var ifFetchingData: Bool = false
-    
-    @Published var pairingRole: PairingRole = .unknown {
-        didSet {
-            isServiceStarted = false
-        }
-    }
-    
-    @Published var isServiceStarted: Bool = false {
-        didSet {
-            hostPairingManager.resetState()
-            peerPairingManager.resetState()
-            switch pairingRole {
-            case .host:
-                if isServiceStarted {
-                    hostPairingManager.startHosting()
-                }
-                else {
-                    hostPairingManager.stopHosting()
-                }
-            case .peer:
-                if isServiceStarted {
-                    peerPairingManager.startBrowsing()
-                }
-                else {
-                    peerPairingManager.stopBrowsing()
-                }
-            case .unknown:
-                hostPairingManager.stopHosting()
-                peerPairingManager.stopBrowsing()
-                print("Switch Should be disabled")
+        ConnectivityData.shared.$selectedHost
+            .receive(on: DispatchQueue.main)
+            .sink { selectedHost in
+                guard let selectedHost else { return }
+                peerConnectionManager.connectToHost(host: selectedHost)
             }
-        }
-    }
-    
-    // Properties for Host
-    @Published var requetingPairingDevice: PairingDevice?
-    @Published var joinedPeer: [PairingDevice] = []
-    
-    // Properties for Peer
-    @Published var selectedHost: PairingDevice? {
-        didSet {
-            if let selectedHost {
-                peerPairingManager.connectToHost(host: selectedHost)
+            .store(in: &subscriptions)
+        
+        ConnectivityData.shared.$isServiceStarted
+            .receive(on: DispatchQueue.main)
+            .sink { pairingRole in
+                hostConnectionManager.resetState()
+                peerConnectionManager.resetState()
+                
+                switch ConnectivityData.shared.pairingRole {
+                case .host:
+                    if ConnectivityData.shared.isServiceStarted {
+                        hostConnectionManager.startHosting()
+                    }
+                    else {
+                        hostConnectionManager.stopHosting()
+                    }
+                case .peer:
+                    if ConnectivityData.shared.isServiceStarted {
+                        peerConnectionManager.startBrowsing()
+                    }
+                    else {
+                        peerConnectionManager.stopBrowsing()
+                    }
+                case .unknown:
+                    hostConnectionManager.stopHosting()
+                    peerConnectionManager.stopBrowsing()
+                    print("Switch Should be disabled")
+                }
             }
-        }
+            .store(in: &subscriptions)
+        self.peerConnectionManager.peerConnectionManagerDelegate = self
+        self.hostConnectionManager.hostConnectionManagerDelegate = self
     }
-    @Published var availabelHosts: [PairingDevice] = []
-    
-    var subscriptions = Set<AnyCancellable>()
     
     func grantPermisson(requetingPairingDevice: PairingDevice, permission: Bool) {
-        hostPairingManager.grantPermisson(pairingDevice: requetingPairingDevice, permission: permission)
+        hostConnectionManager.grantPermisson(pairingDevice: requetingPairingDevice, permission: permission)
         if permission {
-            DispatchQueue.main.async { [weak self] in
-                guard let self else { return }
-                joinedPeer.append(requetingPairingDevice)
+            DispatchQueue.main.async {
+                ConnectivityData.shared.joinedPeer.append(requetingPairingDevice)
             }
         }
     }
     
     func fetchData(ofType type: SendDataType) {
-        ifFetchingData = true
-        switch pairingRole {
+        ConnectivityData.shared.ifFetchingData = true
+        switch ConnectivityData.shared.pairingRole {
         case .host:
             switch type {
             case .passengers:
-                passengerManager.getPassengerRecordForHost { [weak self] result in
-                    guard let self else { return }
+                passengerManager.getPassengerRecordForHost { result in
                     print(result ?? "empty Passenger")
-                    ifFetchingData = false
+                    ConnectivityData.shared.ifFetchingData = false
                 }
             case .meals:
-                mealManager.getMealRecordForHost { [weak self] result in
-                    guard let self else { return }
+                mealManager.getMealRecordForHost { result in
                     print(result ?? "empty meals")
-                    ifFetchingData = false
+                    ConnectivityData.shared.ifFetchingData = false
                 }
             default:
-                print("Host dose not require to fetch order data")
+                print("Host dose not require to fetch/send order data")
             }
         case .peer:
+            guard let selectedHost = ConnectivityData.shared.selectedHost else {
+                print("host not selected")
+                return
+            }
             switch type {
             case .orders:
-                orderDataManager.getOrderRecordForPeer { [weak self] result in
-                    guard let self else { return }
+                orderDataManager.getOrderRecordForPeer(host: selectedHost) { result in
                     print(result ?? "empty Order")
-                    ifFetchingData = false
+                    ConnectivityData.shared.ifFetchingData = false
                 }
             case .passengers:
-                passengerManager.getPassengerRecordForPeer { [weak self] result in
-                    guard let self else { return }
+                passengerManager.getPassengerRecordForPeer(host: selectedHost) { result in
                     print(result ?? "empty Passenger")
-                    ifFetchingData = false
+                    ConnectivityData.shared.ifFetchingData = false
                 }
             case .meals:
-                mealManager.getMealRecordForPeer { [weak self] result in
-                    guard let self else { return }
+                mealManager.getMealRecordForPeer(host: selectedHost) { result in
                     print(result ?? "empty meals")
-                    ifFetchingData = false
+                    ConnectivityData.shared.ifFetchingData = false
                 }
+            default:
+                print("Peer dose not require to send order data")
             }
         case .unknown:
             break
@@ -148,42 +135,39 @@ class PairingViewModel: NSObject, ObservableObject
     }
     
     func clearAllData() {
-        switch pairingRole {
+        switch ConnectivityData.shared.pairingRole {
         case .host:
-            hostPairingManager.resetAllCoreData()
+            hostConnectionManager.resetAllCoreData()
         case .peer:
-            peerPairingManager.resetAllCoreData()
+            peerConnectionManager.resetAllCoreData()
         case .unknown:
             print("Button should be hidden")
         }
     }
 }
 
-extension PairingViewModel: HostPairingManagerDelegate {
+extension PairingViewModel: HostConnectionManagerDelegate {
     func didReceivePairingRequest(pairingDevice: PairingDevice) {
-        DispatchQueue.main.async { [weak self] in
-            guard let self else { return }
-            requetingPairingDevice = pairingDevice
+        DispatchQueue.main.async {
+            ConnectivityData.shared.requestingPairingDevice = pairingDevice
         }
     }
 }
 
-extension PairingViewModel: PeerPairingManagerDelegate {
+extension PairingViewModel: PeerConnectionManagerDelegate {
     func foundHost(host: PairingDevice) {
-        DispatchQueue.main.async { [weak self] in
-            guard let self else { return }
-            if availabelHosts.contains(host) {
+        DispatchQueue.main.async {
+            if ConnectivityData.shared.availabelHosts.contains(host) {
                 return
             }
-            availabelHosts.append(host)
+            ConnectivityData.shared.availabelHosts.append(host)
         }
     }
     
     func lostHost(host: PairingDevice) {
-        DispatchQueue.main.async { [weak self] in
-            guard let self else { return }
-            if let index = availabelHosts.firstIndex(of: host) {
-                availabelHosts.remove(at: index)
+        DispatchQueue.main.async {
+            if let index = ConnectivityData.shared.availabelHosts.firstIndex(of: host) {
+                ConnectivityData.shared.availabelHosts.remove(at: index)
             }
         }
     }

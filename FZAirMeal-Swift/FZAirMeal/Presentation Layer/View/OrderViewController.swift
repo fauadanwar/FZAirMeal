@@ -11,7 +11,7 @@ import CoreData
 class OrderViewController: UIViewController {
 
     @IBOutlet weak var tblOrderList: UITableView!
-    private let orderViewModel = OrderViewModel()
+    private var orderViewModel: OrderViewModelProtocol = OrderViewModel()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -47,6 +47,9 @@ extension OrderViewController : UITableViewDelegate, UITableViewDataSource
 extension OrderViewController : OrderViewModelDelegate
 {
     func orderDataUpdated() {
-        self.tblOrderList.reloadData()
+        DispatchQueue.main.async { [weak self] in
+            guard let self else { return }
+            tblOrderList.reloadData()
+        }
     }
 }

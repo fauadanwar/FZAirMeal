@@ -7,11 +7,11 @@
 
 import Foundation
 
-protocol PassengerDataManagerprotocol {
+protocol PassengerDataManagerProtocol {
     var passengerDataManagerDelegate: PassengerDataManagerDelegate? { get set }
-    func getPassengerRecord(completionHandler:@escaping(_ result: Array<Passenger>?)-> Void)
     func getPassengerRecordForHost(completionHandler:@escaping(_ result: Array<Passenger>?)-> Void)
-    func getPassengerRecordForPeer(completionHandler:@escaping(_ result: Array<Passenger>?)-> Void)
+    func getPassengerRecordForPeer(host: PairingDevice, completionHandler:@escaping(_ result: Array<Passenger>?)-> Void)
+    func getPassengerRecord() -> Array<Passenger>?
     func getPassengerAt(indexPath: IndexPath) -> Passenger?
     func getPassengerWith(passengerId: String) -> Passenger?
     func getPassengerAndMealAt(indexPath: IndexPath) -> (Passenger?, Meal?)
@@ -26,10 +26,11 @@ protocol PassengerDataManagerDelegate: AnyObject
     func passengerDataUpdated()
 }
 
-class PassengerDataManager: PassengerDataManagerprotocol {
+class PassengerDataManager: PassengerDataManagerProtocol {
 
-    private let _cdPassengerDataRepository : any PassengerCoreDataRepositoryProtocol
+    private var _cdPassengerDataRepository : any PassengerCoreDataRepositoryProtocol
     private let _passengerResourceRepository: any PassengerResourceRepositoryProtocol
+    
     weak var passengerDataManagerDelegate: PassengerDataManagerDelegate?
     
     init(_cdPassengerDataRepository: any PassengerCoreDataRepositoryProtocol = PassengerCoreDataRepository.shared,
@@ -37,16 +38,16 @@ class PassengerDataManager: PassengerDataManagerprotocol {
     {
         self._cdPassengerDataRepository = _cdPassengerDataRepository
         self._passengerResourceRepository = _passengerResourceRepository
+        self._cdPassengerDataRepository.passengerCoreDataRepositoryDelegate = self
     }
 
-    func getPassengerRecord(completionHandler:@escaping(_ result: Array<Passenger>?)-> Void) {
+    func getPassengerRecord() -> Array<Passenger>? {
         let response = _cdPassengerDataRepository.getAll()
         if(response.count != 0) {
-            // return response to the view controller
-            completionHandler(response)
+            return response
         }
         else {
-            completionHandler(nil)
+            return nil
         }
     }
     
@@ -54,19 +55,23 @@ class PassengerDataManager: PassengerDataManagerprotocol {
         // get data from api
         _passengerResourceRepository.getRecordsFromAPI { [weak self] apiResponse in
             guard let self else { return }
-            if(apiResponse != nil && apiResponse?.count != 0){
+            if let apiResponse,
+               apiResponse.count > 0
+            {
                 // insert record in core data
-                _ = _cdPassengerDataRepository.batchInsertPassengerRecords(records: apiResponse!)
+                _ = _cdPassengerDataRepository.batchInsertPassengerRecords(records: apiResponse)
                 completionHandler(apiResponse)
             }
             else {
                 // get data from file
-                _passengerResourceRepository.getRecords { [weak self] apiResponse in
+                _passengerResourceRepository.getRecords { [weak self] fileResponse in
                     guard let self else { return }
-                    if(apiResponse != nil && apiResponse?.count != 0){
+                    if let fileResponse,
+                       fileResponse.count > 0
+                    {
                         // insert record in core data
-                        _ = _cdPassengerDataRepository.batchInsertPassengerRecords(records: apiResponse!)
-                        completionHandler(apiResponse)
+                        _ = _cdPassengerDataRepository.batchInsertPassengerRecords(records: fileResponse)
+                        completionHandler(fileResponse)
                     }
                     else {
                         completionHandler(nil)
@@ -76,8 +81,18 @@ class PassengerDataManager: PassengerDataManagerprotocol {
         }
     }
     
-    func getPassengerRecordForPeer(completionHandler:@escaping(_ result: Array<Passenger>?)-> Void) {
-        completionHandler(nil)
+    func getPassengerRecordForPeer(host: PairingDevice, completionHandler:@escaping(_ result: Array<Passenger>?) -> Void) {
+        _passengerResourceRepository.getPassengerRecordsFromHost(host: host) { [weak self] passengers in
+            guard let passengers = passengers,
+                  let self,
+                  passengers.count > 0 else {
+                completionHandler(nil)
+                return
+            }
+            // insert record in core data
+            _ = _cdPassengerDataRepository.batchInsertPassengerRecords(records: passengers)
+            completionHandler(passengers)
+        }
     }
     
     func getPassengerAt(indexPath: IndexPath) -> Passenger? {

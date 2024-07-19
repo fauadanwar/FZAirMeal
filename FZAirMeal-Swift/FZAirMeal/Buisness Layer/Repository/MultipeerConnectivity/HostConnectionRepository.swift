@@ -1,5 +1,5 @@
 //
-//  HostPairingRepository.swift
+//  HostConnectionRepository.swift
 //  FZAirMeal
 //
 //  Created by Fouad Mohammed Rafique Anwar on 07/07/24.
@@ -8,30 +8,32 @@
 import Foundation
 import MultipeerConnectivity
 
-protocol HostPairingRepositoryProtocol: BasePairingRepositoryProtocol {
-    var hostPairingRepositoryDelegate: HostPairingRepositoryDelegate? { get set }
+protocol HostConnectionRepositoryProtocol: BasePairingRepositoryProtocol {
+    var hostConnectionRepositoryDelegate: HostConnectionRepositoryDelegate? { get set }
     func startAdvertising()
     func stopAdvertising()
     func resetState()
     func grantPermisson(pairingDevice: PairingDevice, permission: Bool)
     func brodcastData<T: Record>(_ object: T, type: SendDataType) -> Bool
-    func sendData<T: Record>(_ object: T, type: SendDataType, toPeer: PairingDevice) -> Bool
 }
 
-protocol HostPairingRepositoryDelegate: AnyObject{
+protocol HostConnectionRepositoryDelegate: AnyObject{
     func didReceivePairingRequest(pairingDevice: PairingDevice)
 }
 
-class HostPairingRepository: NSObject, HostPairingRepositoryProtocol {
+class HostConnectionRepository: NSObject, HostConnectionRepositoryProtocol {
         
     private let serviceType = "air-meal"
     private let advertiser: MCNearbyServiceAdvertiser
     let session: MCSession
-    weak var hostPairingRepositoryDelegate: HostPairingRepositoryDelegate?
+    weak var hostConnectionRepositoryDelegate: HostConnectionRepositoryDelegate?
     private var pairingRequest: PairingRequest?
-    @Published var joinedPeer: [PairingDevice] = []
+    var joinedPeer: [PairingDevice] = []
+    private let cdOrderDataRepository: any OrderCoreDataRepositoryProtocol = OrderCoreDataRepository.shared
+    private let cdPassengerDataRepository: any PassengerCoreDataRepositoryProtocol = PassengerCoreDataRepository.shared
+    private let cdMealDataRepository: any MealCoreDataRepositoryProtocol = MealCoreDataRepository.shared
 
-    static let shared = HostPairingRepository()
+    static let shared = HostConnectionRepository()
     
     private override init() {
         let peer = MCPeerID(displayName: UIDevice.current.name)
@@ -57,18 +59,6 @@ class HostPairingRepository: NSObject, HostPairingRepositoryProtocol {
         joinedPeer.removeAll()
     }
     
-    func sendData<T: Record>(_ object: T, type: SendDataType, toPeer: PairingDevice) -> Bool {
-        do {
-            let wrapper = try DataWrapper(type: type, object: object)
-            let data = try JSONEncoder().encode(wrapper)
-            try session.send(data, toPeers: [toPeer.id], with: .reliable)
-            return true
-        } catch {
-            print("Error sending data: \(error.localizedDescription)")
-            return false
-        }
-    }
-    
     func brodcastData<T: Record>(_ object: T, type: SendDataType) -> Bool {
         do {
             let wrapper = try DataWrapper(type: type, object: object)
@@ -83,7 +73,7 @@ class HostPairingRepository: NSObject, HostPairingRepositoryProtocol {
     }
 }
 
-extension HostPairingRepository: MCNearbyServiceAdvertiserDelegate {
+extension HostConnectionRepository: MCNearbyServiceAdvertiserDelegate {
     func advertiser(_ advertiser: MCNearbyServiceAdvertiser, didReceiveInvitationFromPeer peerID: MCPeerID, withContext context: Data?, invitationHandler: @escaping (Bool, MCSession?) -> Void) {
        
         guard !joinedPeer.contains(where: { $0.id == peerID }) else {
@@ -98,7 +88,7 @@ extension HostPairingRepository: MCNearbyServiceAdvertiserDelegate {
                 invitationHandler(permission, permission ? session : nil)
             })
         
-        hostPairingRepositoryDelegate?.didReceivePairingRequest(pairingDevice: PairingDevice(id: peerID))
+        hostConnectionRepositoryDelegate?.didReceivePairingRequest(pairingDevice: PairingDevice(id: peerID))
     }
     
     func grantPermisson(pairingDevice: PairingDevice, permission: Bool) {
@@ -109,7 +99,7 @@ extension HostPairingRepository: MCNearbyServiceAdvertiserDelegate {
     }
 }
 
-extension HostPairingRepository: MCSessionDelegate
+extension HostConnectionRepository: MCSessionDelegate
 {
     func session(_ session: MCSession, peer peerID: MCPeerID, didChange state: MCSessionState) {
         DispatchQueue.main.async { [weak self] in
@@ -118,7 +108,6 @@ extension HostPairingRepository: MCSessionDelegate
                 peer.connectionStatus = state
             }
         }
-
         switch state {
         case .connected:
             print("connected: \(peerID.displayName)")
@@ -136,12 +125,32 @@ extension HostPairingRepository: MCSessionDelegate
             let wrapper = try JSONDecoder().decode(DataWrapper.self, from: data)
             switch wrapper.type {
             case .orders:
-                let orders = try JSONDecoder().decode(Order.self, from: wrapper.data)
-            default:
-                print("Recived wrong data on Host data")
+                let wrapper = try DataWrapper(type: .orders, objects: cdOrderDataRepository.getAll())
+                let data = try JSONEncoder().encode(wrapper)
+                try session.send(data, toPeers: [peerID], with: .reliable)
+            case .passengers:
+                let wrapper = try DataWrapper(type: .passengers, objects: cdPassengerDataRepository.getAll())
+                let data = try JSONEncoder().encode(wrapper)
+                try session.send(data, toPeers: [peerID], with: .reliable)
+            case .meals:
+                let wrapper = try DataWrapper(type: .meals, objects: cdMealDataRepository.getAll())
+                let data = try JSONEncoder().encode(wrapper)
+                try session.send(data, toPeers: [peerID], with: .reliable)
+            case .order:
+                if let data = wrapper.data {
+                    let order = try JSONDecoder().decode(Order.self, from: data)
+                    guard cdOrderDataRepository.create(record: order) else { return }
+                    _ = brodcastData(order, type: .order)
+                }
+            case .deleteOrder:
+                if let data = wrapper.data {
+                    let order = try JSONDecoder().decode(Order.self, from: data)
+                    guard cdOrderDataRepository.delete(byIdentifier: order.id) else { return }
+                    _ = brodcastData(order, type: .order)
+                }
             }
         } catch {
-            print("Error decoding data: \(error.localizedDescription)")
+            print("Error decoding data: \(error)")
         }
     }
     // Other required MCSessionDelegate methods

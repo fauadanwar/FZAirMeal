@@ -9,9 +9,9 @@ import Foundation
 
 protocol MealDataManagerProtocol {
     var mealDataManagerDelegate: MealDataManagerDelegate? { get set }
-    func getMealRecord(completionHandler:@escaping(_ result: Array<Meal>?)-> Void)
-    func getMealRecordForPeer(completionHandler:@escaping(_ result: Array<Meal>?)-> Void)
+    func getMealRecordForPeer(host: PairingDevice, completionHandler:@escaping(_ result: Array<Meal>?)-> Void)
     func getMealRecordForHost(completionHandler:@escaping(_ result: Array<Meal>?)-> Void)
+    func getMealRecord() -> Array<Meal>?
     func getMealsCount() -> Int
     func getMealAt(indexPath: IndexPath) -> Meal?
     func getMealWith(mealid: String) -> Meal?
@@ -27,48 +27,59 @@ protocol MealDataManagerDelegate: AnyObject
 
 class MealDataManager: MealDataManagerProtocol {
 
-    private let _cdMealDataRepository: any MealCoreDataRepositoryProtocol
+    private var _cdMealDataRepository: any MealCoreDataRepositoryProtocol
     private let _mealResourceRepository: any MealResourceRepositoryProtocol
     weak var mealDataManagerDelegate: MealDataManagerDelegate?
 
     init(_cdMealDataRepository: any MealCoreDataRepositoryProtocol = MealCoreDataRepository.shared, _mealResourceRepository: any MealResourceRepositoryProtocol = MealResourceRepository.shared) {
         self._cdMealDataRepository = _cdMealDataRepository
         self._mealResourceRepository = _mealResourceRepository
+        self._cdMealDataRepository.mealCoreDataRepositoryDelegate = self
     }
     
-    func getMealRecord(completionHandler:@escaping(_ result: Array<Meal>?)-> Void) {
+    func getMealRecord() -> Array<Meal>? {
         let response = _cdMealDataRepository.getAll()
         if(response.count != 0) {
-            // return response to the view controller
-            completionHandler(response)
+            return response
         }
-        else
-        {
-            completionHandler(nil)
+        else {
+            return nil
         }
     }
     
-    func getMealRecordForPeer(completionHandler:@escaping(_ result: Array<Meal>?)-> Void) {
-        completionHandler(nil)
+    func getMealRecordForPeer(host: PairingDevice, completionHandler:@escaping(_ result: Array<Meal>?)-> Void) {
+        _mealResourceRepository.getMealRecordsFromHost(host: host) { [weak self] meals in
+            guard let meals = meals,
+                  let self,
+                  meals.count > 0 else {
+                completionHandler(nil)
+                return
+            }
+            // insert record in core data
+            _ = _cdMealDataRepository.batchInsertMealRecords(records: meals)
+            completionHandler(meals)
+        }
     }
     
     func getMealRecordForHost(completionHandler:@escaping(_ result: Array<Meal>?)-> Void) {
         // get data from api
         _mealResourceRepository.getRecordsFromAPI {[weak self] apiResponse in
             guard let self else { return }
-            if(apiResponse != nil && apiResponse?.count != 0) {
+            if let apiResponse,
+               apiResponse.count > 0 {
                 // insert record in core data
-                _ = _cdMealDataRepository.batchInsertMealRecords(records: apiResponse!)
+                _ = _cdMealDataRepository.batchInsertMealRecords(records: apiResponse)
                 completionHandler(apiResponse)
             }
             else {
                 // get data from file
-                _mealResourceRepository.getRecords { [weak self] apiResponse in
+                _mealResourceRepository.getRecords { [weak self] fileResponse in
                     guard let self else { return }
-                    if(apiResponse != nil && apiResponse?.count != 0){
+                    if let fileResponse,
+                       fileResponse.count > 0 {
                         // insert record in core data
-                        _ = _cdMealDataRepository.batchInsertMealRecords(records: apiResponse!)
-                        completionHandler(apiResponse)
+                        _ = _cdMealDataRepository.batchInsertMealRecords(records: fileResponse)
+                        completionHandler(fileResponse)
                     }
                     else {
                         completionHandler(nil)

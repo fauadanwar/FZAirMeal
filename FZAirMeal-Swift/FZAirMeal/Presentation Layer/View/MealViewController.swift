@@ -14,25 +14,26 @@ class MealViewController: UIViewController {
     @IBOutlet weak var barButtonPlaceOrder: UIBarButtonItem!
 
     var passenger: Passenger? = nil
-    private let mealViewModel = MealViewModel()
+    private var mealViewModel: MealViewModelProtocol = MealViewModel()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        self.tblMealList.reloadData()
         mealViewModel.mealViewModelDelegate = self
-        if let _ = passenger?.orderId
+    }
+    
+    func updateView() {
+        self.tblMealList.reloadData()
+        guard let passenger = self.passenger else { return }
+        self.passenger = mealViewModel.getPassengerWith(passengerID: passenger.id)
+        if let _ = passenger.orderId
         {
-            barButtonPlaceOrder.title = "Place Order"
-        }
-        else {
-            barButtonPlaceOrder.title = "Cancel Order"
+            barButtonPlaceOrder.isEnabled = false
         }
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        self.tblMealList.reloadData()
+        updateView()
     }
     
     @IBAction func placeOrderButtonTapped(_ sender: Any) {
@@ -41,27 +42,14 @@ class MealViewController: UIViewController {
            let meal = mealViewModel.getMealAt(indexPath: indexPath),
            let passenger
         {
-            if let orderId = passenger.orderId
+            let order = Order(id: "\(UUID())", passengerId: passenger.id, mealId: meal.id, time: Date())
+            if(mealViewModel.sendOrder(order: order))
             {
-                if(mealViewModel.cancelOrder(orderId: orderId))
-                {
-                    displayAlert(message: "Order Canceled")
-                }
-                else
-                {
-                    displayAlert(message: "Failed to Canceled order")
-                }
+                displayAlert(message: "Order Placed")
             }
-            else {
-                let order = Order(id: "\(UUID())", passengerId: passenger.id, mealId: meal.id, time: Date())
-                if(mealViewModel.placeOrder(order: order))
-                {
-                    displayAlert(message: "Order Placed")
-                }
-                else
-                {
-                    displayAlert(message: "Failed to place order")
-                }
+            else
+            {
+                displayAlert(message: "Failed to place order")
             }
         }
         else
@@ -106,6 +94,9 @@ extension MealViewController : UITableViewDelegate, UITableViewDataSource
 extension MealViewController : MealViewModelDelegate
 {
     func mealDataUpdated() {
-        self.tblMealList.reloadData()
+        DispatchQueue.main.async { [weak self] in
+            guard let self else { return }
+            updateView()
+        }
     }
 }

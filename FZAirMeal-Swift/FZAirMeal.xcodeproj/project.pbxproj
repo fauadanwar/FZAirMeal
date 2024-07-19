@@ -56,13 +56,15 @@
 		A0391E5C2C32CE6B001EBBC5 /* BaseFileResourceRepositoryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0391E5B2C32CE6B001EBBC5 /* BaseFileResourceRepositoryProtocol.swift */; };
 		A0391E5E2C32F4CC001EBBC5 /* PassengerResourceRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0391E5D2C32F4CC001EBBC5 /* PassengerResourceRepository.swift */; };
 		A0391E602C32F4D6001EBBC5 /* MealResourceRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0391E5F2C32F4D6001EBBC5 /* MealResourceRepository.swift */; };
-		A07D40952C383BA70058B04A /* HostPairingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A07D40942C383BA60058B04A /* HostPairingManager.swift */; };
-		A07D40972C3AA9AE0058B04A /* HostPairingRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = A07D40962C3AA9AE0058B04A /* HostPairingRepository.swift */; };
+		A07D40952C383BA70058B04A /* HostConnectionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A07D40942C383BA60058B04A /* HostConnectionManager.swift */; };
+		A07D40972C3AA9AE0058B04A /* HostConnectionRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = A07D40962C3AA9AE0058B04A /* HostConnectionRepository.swift */; };
 		A07D409A2C3AAB4E0058B04A /* BasePairingRepositoryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = A07D40992C3AAB4E0058B04A /* BasePairingRepositoryProtocol.swift */; };
 		A07D409C2C3AB76B0058B04A /* SendDataType.swift in Sources */ = {isa = PBXBuildFile; fileRef = A07D409B2C3AB76B0058B04A /* SendDataType.swift */; };
-		A07D409E2C3ABB890058B04A /* PeerPairingRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = A07D409D2C3ABB890058B04A /* PeerPairingRepository.swift */; };
-		A07D40A02C3AC7190058B04A /* PeerPairingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A07D409F2C3AC7190058B04A /* PeerPairingManager.swift */; };
+		A07D409E2C3ABB890058B04A /* PeerConnectionRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = A07D409D2C3ABB890058B04A /* PeerConnectionRepository.swift */; };
+		A07D40A02C3AC7190058B04A /* PeerConnectionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A07D409F2C3AC7190058B04A /* PeerConnectionManager.swift */; };
 		A07D40A22C3ACA310058B04A /* PairingDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = A07D40A12C3ACA310058B04A /* PairingDevice.swift */; };
+		A0B144DB2C46AFF400A02886 /* OrderResourceRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0B144DA2C46AFF400A02886 /* OrderResourceRepository.swift */; };
+		A0B144DD2C47AF3A00A02886 /* ConnectivityData.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0B144DC2C47AF3A00A02886 /* ConnectivityData.swift */; };
 		A0E7B7492C3D6AD500EB1290 /* CoreDataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0E7B7482C3D6AD400EB1290 /* CoreDataProvider.swift */; };
 		A0E7B74B2C3FC49300EB1290 /* Date+toString.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0E7B74A2C3FC49300EB1290 /* Date+toString.swift */; };
 /* End PBXBuildFile section */
@@ -138,13 +140,15 @@
 		A0391E5B2C32CE6B001EBBC5 /* BaseFileResourceRepositoryProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseFileResourceRepositoryProtocol.swift; sourceTree = "<group>"; };
 		A0391E5D2C32F4CC001EBBC5 /* PassengerResourceRepository.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PassengerResourceRepository.swift; sourceTree = "<group>"; };
 		A0391E5F2C32F4D6001EBBC5 /* MealResourceRepository.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MealResourceRepository.swift; sourceTree = "<group>"; };
-		A07D40942C383BA60058B04A /* HostPairingManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HostPairingManager.swift; sourceTree = "<group>"; };
-		A07D40962C3AA9AE0058B04A /* HostPairingRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HostPairingRepository.swift; sourceTree = "<group>"; };
+		A07D40942C383BA60058B04A /* HostConnectionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HostConnectionManager.swift; sourceTree = "<group>"; };
+		A07D40962C3AA9AE0058B04A /* HostConnectionRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HostConnectionRepository.swift; sourceTree = "<group>"; };
 		A07D40992C3AAB4E0058B04A /* BasePairingRepositoryProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasePairingRepositoryProtocol.swift; sourceTree = "<group>"; };
 		A07D409B2C3AB76B0058B04A /* SendDataType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendDataType.swift; sourceTree = "<group>"; };
-		A07D409D2C3ABB890058B04A /* PeerPairingRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeerPairingRepository.swift; sourceTree = "<group>"; };
-		A07D409F2C3AC7190058B04A /* PeerPairingManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeerPairingManager.swift; sourceTree = "<group>"; };
+		A07D409D2C3ABB890058B04A /* PeerConnectionRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeerConnectionRepository.swift; sourceTree = "<group>"; };
+		A07D409F2C3AC7190058B04A /* PeerConnectionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeerConnectionManager.swift; sourceTree = "<group>"; };
 		A07D40A12C3ACA310058B04A /* PairingDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PairingDevice.swift; sourceTree = "<group>"; };
+		A0B144DA2C46AFF400A02886 /* OrderResourceRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderResourceRepository.swift; sourceTree = "<group>"; };
+		A0B144DC2C47AF3A00A02886 /* ConnectivityData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectivityData.swift; sourceTree = "<group>"; };
 		A0E7B7482C3D6AD400EB1290 /* CoreDataProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataProvider.swift; sourceTree = "<group>"; };
 		A0E7B74A2C3FC49300EB1290 /* Date+toString.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+toString.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -231,6 +235,7 @@
 				188074692B4574150057B8A8 /* Order.swift */,
 				188074AD2B473F8E0057B8A8 /* PairingRequest.swift */,
 				A07D40A12C3ACA310058B04A /* PairingDevice.swift */,
+				A0B144DC2C47AF3A00A02886 /* ConnectivityData.swift */,
 				A07D409B2C3AB76B0058B04A /* SendDataType.swift */,
 			);
 			path = Model;
@@ -239,10 +244,10 @@
 		1880744E2B4568000057B8A8 /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
-				188074962B46DA480057B8A8 /* PassengerViewModel.swift */,
-				188074A92B4735B30057B8A8 /* MealViewModel.swift */,
-				188074982B46DA590057B8A8 /* OrderViewModel.swift */,
 				1880749A2B46DA680057B8A8 /* PairingViewModel.swift */,
+				188074A92B4735B30057B8A8 /* MealViewModel.swift */,
+				188074962B46DA480057B8A8 /* PassengerViewModel.swift */,
+				188074982B46DA590057B8A8 /* OrderViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -252,8 +257,8 @@
 			children = (
 				1880741F2B454B6E0057B8A8 /* Main.storyboard */,
 				188074922B46DA1E0057B8A8 /* PairingViewController.swift */,
-				1880741D2B454B6E0057B8A8 /* PassengerViewController.swift */,
 				188074A52B47005C0057B8A8 /* MealViewController.swift */,
+				1880741D2B454B6E0057B8A8 /* PassengerViewController.swift */,
 				188074942B46DA2C0057B8A8 /* OrderViewController.swift */,
 				1880749E2B46F8C10057B8A8 /* TableViewCell */,
 			);
@@ -263,11 +268,11 @@
 		188074522B4569220057B8A8 /* Manager */ = {
 			isa = PBXGroup;
 			children = (
-				188074812B45C4B20057B8A8 /* PassengerDataManager.swift */,
+				A07D40942C383BA60058B04A /* HostConnectionManager.swift */,
+				A07D409F2C3AC7190058B04A /* PeerConnectionManager.swift */,
 				188074532B4569420057B8A8 /* MealDataManager.swift */,
+				188074812B45C4B20057B8A8 /* PassengerDataManager.swift */,
 				188074872B45C8970057B8A8 /* OrderDataManager.swift */,
-				A07D40942C383BA60058B04A /* HostPairingManager.swift */,
-				A07D409F2C3AC7190058B04A /* PeerPairingManager.swift */,
 			);
 			path = Manager;
 			sourceTree = "<group>";
@@ -309,6 +314,7 @@
 			isa = PBXGroup;
 			children = (
 				188074892B45D11F0057B8A8 /* OrderCoreDataRepository.swift */,
+				A0B144DA2C46AFF400A02886 /* OrderResourceRepository.swift */,
 			);
 			path = Order;
 			sourceTree = "<group>";
@@ -412,8 +418,8 @@
 		A07D40982C3AA9B40058B04A /* MultipeerConnectivity */ = {
 			isa = PBXGroup;
 			children = (
-				A07D40962C3AA9AE0058B04A /* HostPairingRepository.swift */,
-				A07D409D2C3ABB890058B04A /* PeerPairingRepository.swift */,
+				A07D40962C3AA9AE0058B04A /* HostConnectionRepository.swift */,
+				A07D409D2C3ABB890058B04A /* PeerConnectionRepository.swift */,
 			);
 			path = MultipeerConnectivity;
 			sourceTree = "<group>";
@@ -567,7 +573,9 @@
 				A0E7B74B2C3FC49300EB1290 /* Date+toString.swift in Sources */,
 				188074AA2B4735B30057B8A8 /* MealViewModel.swift in Sources */,
 				188074A02B46F9250057B8A8 /* OrderTableViewCell.swift in Sources */,
+				A0B144DD2C47AF3A00A02886 /* ConnectivityData.swift in Sources */,
 				188074752B457D690057B8A8 /* CDPassengerExtention.swift in Sources */,
+				A0B144DB2C46AFF400A02886 /* OrderResourceRepository.swift in Sources */,
 				1880746C2B45742C0057B8A8 /* Passenger.swift in Sources */,
 				188074972B46DA480057B8A8 /* PassengerViewModel.swift in Sources */,
 				188074242B454B6E0057B8A8 /* FZAirMeal.xcdatamodeld in Sources */,
@@ -593,7 +601,7 @@
 				1880741C2B454B6E0057B8A8 /* SceneDelegate.swift in Sources */,
 				188074AE2B473F8E0057B8A8 /* PairingRequest.swift in Sources */,
 				188074B02B4740CA0057B8A8 /* PairingTableViewCell.swift in Sources */,
-				A07D40952C383BA70058B04A /* HostPairingManager.swift in Sources */,
+				A07D40952C383BA70058B04A /* HostConnectionManager.swift in Sources */,
 				1880747E2B45A5F50057B8A8 /* BaseCoreDataRepositoryProtocol.swift in Sources */,
 				188074822B45C4B20057B8A8 /* PassengerDataManager.swift in Sources */,
 				1880748F2B45F6D50057B8A8 /* MealProvider.swift in Sources */,
@@ -602,12 +610,12 @@
 				188074882B45C8970057B8A8 /* OrderDataManager.swift in Sources */,
 				A0391E5A2C32CAE0001EBBC5 /* BaseApiResourceRepositoryProtocol.swift in Sources */,
 				A0391E5E2C32F4CC001EBBC5 /* PassengerResourceRepository.swift in Sources */,
-				A07D40A02C3AC7190058B04A /* PeerPairingManager.swift in Sources */,
+				A07D40A02C3AC7190058B04A /* PeerConnectionManager.swift in Sources */,
 				188074A62B47005C0057B8A8 /* MealViewController.swift in Sources */,
 				1880749D2B46F8BC0057B8A8 /* PassengerTableViewCell.swift in Sources */,
 				188074802B45A6B10057B8A8 /* CDRecord.swift in Sources */,
-				A07D40972C3AA9AE0058B04A /* HostPairingRepository.swift in Sources */,
-				A07D409E2C3ABB890058B04A /* PeerPairingRepository.swift in Sources */,
+				A07D40972C3AA9AE0058B04A /* HostConnectionRepository.swift in Sources */,
+				A07D409E2C3ABB890058B04A /* PeerConnectionRepository.swift in Sources */,
 				188074732B457D590057B8A8 /* CDOrderExtention.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

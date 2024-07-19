@@ -8,15 +8,16 @@
 import Foundation
 import CoreData
 
-protocol OrderDataManagerprotocol
+protocol OrderDataManagerProtocol
 {
     var orderDataManagerDelegate: OrderDataManagerDelegate? { get set }
-    func create(record: Order) -> Bool
-    func deleteOrder(byIdentifier id: String) -> Bool
+    func createAndSendOrderToPeers(order: Order) -> Bool
+    func sendOrderToHost(order: Order, toHost: PairingDevice) -> Bool
+    func deleteAndSendOrderToPeers(order: Order) -> Bool
     func updateOrder(record: Order) -> Bool
     func resetCoreData()
-    func getOrderRecord(completionHandler:@escaping(_ result: Array<Order>?)-> Void)
-    func getOrderRecordForPeer(completionHandler:@escaping(_ result: Array<Order>?)-> Void)
+    func getOrderRecord() -> Array<Order>?
+    func getOrderRecordForPeer(host: PairingDevice, completionHandler:@escaping(_ result: Array<Order>?)-> Void)
     func getOrdersCount() -> Int
     func getOrderAt(indexPath: IndexPath) -> Order?
     func getPassengerMealAndOrderAt(indexPath: IndexPath) -> (Passenger?, Meal?, Order?)
@@ -28,23 +29,46 @@ protocol OrderDataManagerDelegate: AnyObject
     func orderDataUpdated()
 }
 
-class OrderDataManager: OrderDataManagerprotocol
+class OrderDataManager: OrderDataManagerProtocol
 {
-    private let _cdOrderRepository : any OrderRepositoryProtocol
+    private var _cdOrderRepository : any OrderCoreDataRepositoryProtocol
+    private let _orderResourceRepository: any OrderResourceRepositoryProtocol
+    private let peerRepository: PeerConnectionRepositoryProtocol
+    private let hostRepository: HostConnectionRepositoryProtocol
     weak var orderDataManagerDelegate: OrderDataManagerDelegate?
 
-    init(_cdOrderRepository: any OrderRepositoryProtocol = OrderCoreDataRepository.shared) {
+    init(_cdOrderRepository: any OrderCoreDataRepositoryProtocol = OrderCoreDataRepository.shared,
+         _orderResourceRepository: any OrderResourceRepositoryProtocol = OrderResourceRepository.shared,
+         peerRepository: PeerConnectionRepositoryProtocol = PeerConnectionRepository.shared,
+         hostRepository: HostConnectionRepositoryProtocol = HostConnectionRepository.shared) {
         self._cdOrderRepository = _cdOrderRepository
+        self._orderResourceRepository = _orderResourceRepository
+        self.peerRepository = peerRepository
+        self.hostRepository = hostRepository
+        self._cdOrderRepository.orderCoreDataRepositoryDelegate = self
     }
     
-    func create(record: Order) -> Bool
+    
+    func sendOrderToHost(order: Order, toHost: PairingDevice) -> Bool {
+        return peerRepository.sendData(order, type: .order, toHost: toHost)
+    }
+    
+    func sendOrderDeleteRequestToHost(order: Order, toHost: PairingDevice) -> Bool {
+        return peerRepository.sendData(order, type: .deleteOrder, toHost: toHost)
+    }
+    
+    func createAndSendOrderToPeers(order: Order) -> Bool
     {
-        _cdOrderRepository.create(record: record)
+        guard _cdOrderRepository.create(record: order) else { return false }
+        //brodcast data
+        return hostRepository.brodcastData(order, type: .order)
     }
 
-    func deleteOrder(byIdentifier id: String) -> Bool
+    func deleteAndSendOrderToPeers(order: Order) -> Bool
     {
-        return _cdOrderRepository.delete(byIdentifier: id)
+        guard _cdOrderRepository.delete(byIdentifier: order.id) else { return false }
+        //brodcast data
+        return hostRepository.brodcastData(order, type: .deleteOrder)
     }
 
     func updateOrder(record: Order) -> Bool
@@ -57,8 +81,18 @@ class OrderDataManager: OrderDataManagerprotocol
         return _cdOrderRepository.resetCoreData()
     }
     
-    func getOrderRecordForPeer(completionHandler:@escaping(_ result: Array<Order>?)-> Void) {
-        completionHandler(nil)
+    func getOrderRecordForPeer(host: PairingDevice, completionHandler:@escaping(_ result: Array<Order>?)-> Void) {
+        _orderResourceRepository.getOrderRecordsFromHost(host: host) { [weak self] orders in
+            guard let orders = orders,
+                  let self,
+                  orders.count > 0 else {
+                completionHandler(nil)
+                return
+            }
+            // insert record in core data
+            _ = _cdOrderRepository.batchInsertOrderRecords(records: orders)
+            completionHandler(orders)
+        }
     }
     
     func getOrdersCount() -> Int {
@@ -77,15 +111,13 @@ class OrderDataManager: OrderDataManagerprotocol
         return _cdOrderRepository.get(byIdentifier: orderid)
     }
     
-    func getOrderRecord(completionHandler:@escaping(_ result: Array<Order>?)-> Void) {
+    func getOrderRecord() -> Array<Order>? {
         let response = _cdOrderRepository.getAll()
         if(response.count != 0) {
-            // return response to the view controller
-            completionHandler(response)
+            return response
         }
-        else
-        {
-            completionHandler(nil)
+        else {
+            return nil
         }
     }
 }

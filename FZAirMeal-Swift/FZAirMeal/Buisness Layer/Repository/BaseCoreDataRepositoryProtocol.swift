@@ -20,6 +20,7 @@ protocol BaseCoreDataRepositoryProtocol {
     func delete(byIdentifier id: String) -> Bool
     func assignProperties(record: T, cdRecord: CDT)
     func updateProperties(record: T, cdRecord: CDT)
+    func getCDRecord(byIdentifier id: String) -> CDT?
 }
 
 extension BaseCoreDataRepositoryProtocol {

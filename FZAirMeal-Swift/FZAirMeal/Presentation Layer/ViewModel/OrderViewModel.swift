@@ -12,12 +12,20 @@ protocol OrderViewModelDelegate: AnyObject
     func orderDataUpdated()
 }
 
-class OrderViewModel
+protocol OrderViewModelProtocol {
+    var orderViewModelDelegate: OrderViewModelDelegate? { get set }
+    func getOrderAt(indexPath: IndexPath) -> Order?
+    func getPassengerMealAndOrderAt(indexPath: IndexPath) -> (Passenger?, Meal?, Order?)
+    func getOrdersCount() -> Int
+    func cancelOrder(orderId: String) -> Bool
+}
+
+class OrderViewModel: OrderViewModelProtocol
 {
-    private var orderDataManager: OrderDataManagerprotocol
+    private var orderDataManager: OrderDataManagerProtocol
     weak var orderViewModelDelegate: OrderViewModelDelegate?
     
-    init(orderDataManager: OrderDataManagerprotocol = OrderDataManager()) {
+    init(orderDataManager: OrderDataManagerProtocol = OrderDataManager()) {
         self.orderDataManager = orderDataManager
         self.orderDataManager.orderDataManagerDelegate = self
     }
@@ -31,9 +39,26 @@ class OrderViewModel
     }
     
     func getOrdersCount() -> Int {
-        return orderDataManager.getOrdersCount()
+        switch ConnectivityData.shared.pairingRole {
+        case .host:
+            guard ConnectivityData.shared.isServiceStarted else { return 0 }
+            return orderDataManager.getOrdersCount()
+        case .peer:
+            guard let selectedHost = ConnectivityData.shared.selectedHost,
+                  selectedHost.connectionStatus == .connected,
+                  ConnectivityData.shared.isServiceStarted else { return 0 }
+            return orderDataManager.getOrdersCount()
+        case .unknown:
+            return 0
+        }        
+    }
+    
+    func cancelOrder(orderId: String) -> Bool {
+        guard let order = orderDataManager.getOrderWith(orderid: orderId) else { return false }
+        return orderDataManager.deleteAndSendOrderToPeers(order: order)
     }
 }
+
 extension OrderViewModel : OrderDataManagerDelegate
 {
     func orderDataUpdated() {

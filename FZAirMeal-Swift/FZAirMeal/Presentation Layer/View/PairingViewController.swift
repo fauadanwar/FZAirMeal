@@ -21,13 +21,13 @@ class PairingViewController: UIViewController {
     @IBOutlet weak var buttonsParentStackView: UIStackView!
     @IBOutlet weak var tableViewLabel: UILabel!
 
-    private let pairingViewModel = PairingViewModel()
+    private let pairingViewModel: PairingViewModelProtocol = PairingViewModel()
     var subscriptions = Set<AnyCancellable>()
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        pairingViewModel.$pairingRole
+        ConnectivityData.shared.$pairingRole
             .receive(on: DispatchQueue.main)
             .sink { [weak self] pairingRole in
                 guard let self = self else { return }
@@ -49,7 +49,7 @@ class PairingViewController: UIViewController {
             }
             .store(in: &subscriptions)
         
-        pairingViewModel.$isServiceStarted
+        ConnectivityData.shared.$isServiceStarted
             .receive(on: DispatchQueue.main)
             .sink { [weak self] isServiceStarted in
                 guard let self = self else { return }
@@ -58,7 +58,7 @@ class PairingViewController: UIViewController {
             }
             .store(in: &subscriptions)
         
-        pairingViewModel.$requetingPairingDevice
+        ConnectivityData.shared.$requestingPairingDevice
             .receive(on: DispatchQueue.main)
             .sink { [weak self] requetingPairingDevice in
                 guard let self = self, let requetingPairingDevice else { return }
@@ -66,7 +66,7 @@ class PairingViewController: UIViewController {
             }
             .store(in: &subscriptions)
         
-        pairingViewModel.$availabelHosts
+        ConnectivityData.shared.$availabelHosts
             .receive(on: DispatchQueue.main)
             .sink { [weak self] availabelHosts in
                 guard let self = self else { return }
@@ -74,7 +74,7 @@ class PairingViewController: UIViewController {
             }
             .store(in: &subscriptions)
         
-        pairingViewModel.$joinedPeer
+        ConnectivityData.shared.$joinedPeer
             .receive(on: DispatchQueue.main)
             .sink { [weak self] peer in
                 guard let self = self else { return }
@@ -84,16 +84,16 @@ class PairingViewController: UIViewController {
     }
 
     @IBAction func switchPairingValueChange(_ sender: UISwitch) {
-        pairingViewModel.isServiceStarted = sender.isOn
+        ConnectivityData.shared.isServiceStarted = sender.isOn
     }
     
     @IBAction func activityButtonTapped(_ sender: UIButton) {
         let alert = UIAlertController(title: "Pairing Options", message: nil, preferredStyle: .actionSheet)
         alert.addAction(UIAlertAction(title: "Become Host", style: .default, handler: { _ in
-            self.pairingViewModel.pairingRole = .host
+            ConnectivityData.shared.pairingRole = .host
         }))
         alert.addAction(UIAlertAction(title: "Become Peer", style: .default, handler: { _ in
-            self.pairingViewModel.pairingRole = .peer
+            ConnectivityData.shared.pairingRole = .peer
         }))
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
         present(alert, animated: true, completion: nil)
@@ -153,11 +153,11 @@ extension PairingViewController : UITableViewDelegate, UITableViewDataSource
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        switch pairingViewModel.pairingRole {
+        switch ConnectivityData.shared.pairingRole {
         case .host:
-            pairingViewModel.joinedPeer.count
+            ConnectivityData.shared.joinedPeer.count
         case .peer:
-            pairingViewModel.availabelHosts.count
+            ConnectivityData.shared.availabelHosts.count
         case .unknown:
             0
         }
@@ -166,12 +166,12 @@ extension PairingViewController : UITableViewDelegate, UITableViewDataSource
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
         let cell = tableView.dequeueReusableCell(withIdentifier: "PeerCell") as! PairingTableViewCell
-        switch pairingViewModel.pairingRole {
+        switch ConnectivityData.shared.pairingRole {
         case .host:
-            let peer = pairingViewModel.joinedPeer[indexPath.row]
+            let peer = ConnectivityData.shared.joinedPeer[indexPath.row]
             cell.configureCell(pairingDevice: peer)
         case .peer:
-            let host = pairingViewModel.availabelHosts[indexPath.row]
+            let host = ConnectivityData.shared.availabelHosts[indexPath.row]
             cell.configureCell(pairingDevice: host)
         case .unknown:
             cell.lblDeviceName.text = ""
@@ -181,8 +181,8 @@ extension PairingViewController : UITableViewDelegate, UITableViewDataSource
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tblPeersList.deselectRow(at: indexPath, animated: true)
-        if pairingViewModel.pairingRole == .peer {
-            pairingViewModel.selectedHost = pairingViewModel.availabelHosts[indexPath.row]
+        if ConnectivityData.shared.pairingRole == .peer {
+            ConnectivityData.shared.selectedHost = ConnectivityData.shared.availabelHosts[indexPath.row]
         }
     }
 }
