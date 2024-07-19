@@ -62,7 +62,7 @@ class MealViewController: UIViewController {
     {
         let alert = UIAlertController(title: "Alert", message: message, preferredStyle: .alert)
         let okAction = UIAlertAction(title: "Ok", style: .default) { (action) in
-            if message == "Order Placed" || message == "Order Canceled"
+            if message == "Order Placed"
             {
                 self.navigationController?.popViewController(animated: true)
             }

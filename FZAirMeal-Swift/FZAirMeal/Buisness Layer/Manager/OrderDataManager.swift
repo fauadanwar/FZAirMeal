@@ -13,6 +13,7 @@ protocol OrderDataManagerProtocol
     var orderDataManagerDelegate: OrderDataManagerDelegate? { get set }
     func createAndSendOrderToPeers(order: Order) -> Bool
     func sendOrderToHost(order: Order, toHost: PairingDevice) -> Bool
+    func sendOrderDeleteRequestToHost(order: Order, toHost: PairingDevice) -> Bool
     func deleteAndSendOrderToPeers(order: Order) -> Bool
     func updateOrder(record: Order) -> Bool
     func resetCoreData()

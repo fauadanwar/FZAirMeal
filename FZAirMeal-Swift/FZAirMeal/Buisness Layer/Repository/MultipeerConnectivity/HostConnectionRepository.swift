@@ -146,7 +146,7 @@ extension HostConnectionRepository: MCSessionDelegate
                 if let data = wrapper.data {
                     let order = try JSONDecoder().decode(Order.self, from: data)
                     guard cdOrderDataRepository.delete(byIdentifier: order.id) else { return }
-                    _ = brodcastData(order, type: .order)
+                    _ = brodcastData(order, type: .deleteOrder)
                 }
             }
         } catch {

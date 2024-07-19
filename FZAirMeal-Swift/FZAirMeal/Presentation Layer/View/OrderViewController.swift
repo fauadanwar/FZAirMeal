@@ -11,6 +11,7 @@ import CoreData
 class OrderViewController: UIViewController {
 
     @IBOutlet weak var tblOrderList: UITableView!
+    @IBOutlet weak var barButtonCancelOrder: UIBarButtonItem!
     private var orderViewModel: OrderViewModelProtocol = OrderViewModel()
 
     override func viewDidLoad() {
@@ -18,9 +19,43 @@ class OrderViewController: UIViewController {
         self.tblOrderList.reloadData()
         orderViewModel.orderViewModelDelegate = self
     }
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        updateView()
+    }
+    
+    func updateView() {
         self.tblOrderList.reloadData()
+        barButtonCancelOrder.isEnabled = orderViewModel.getOrdersCount() > 0
+    }
+    
+    @IBAction func barButtonCancelOrderTapped(_ sender: Any) {
+        
+        if let indexPath = self.tblOrderList.indexPathForSelectedRow,
+           let order = orderViewModel.getOrderAt(indexPath: indexPath)
+        {
+            if(orderViewModel.cancelOrder(order: order))
+            {
+                displayAlert(message: "Order Canceled")
+            }
+            else
+            {
+                displayAlert(message: "Failed to Canceled order")
+            }
+        }
+        else
+        {
+            displayAlert(message: "Select Order first")
+        }
+    }
+    
+    private func displayAlert(message: String)
+    {
+        let alert = UIAlertController(title: "Alert", message: message, preferredStyle: .alert)
+        let okAction = UIAlertAction(title: "Ok", style: .default, handler: nil)
+        alert.addAction(okAction)
+        self.present(alert, animated: true)
     }
 }
 
@@ -49,7 +84,7 @@ extension OrderViewController : OrderViewModelDelegate
     func orderDataUpdated() {
         DispatchQueue.main.async { [weak self] in
             guard let self else { return }
-            tblOrderList.reloadData()
+            updateView()
         }
     }
 }

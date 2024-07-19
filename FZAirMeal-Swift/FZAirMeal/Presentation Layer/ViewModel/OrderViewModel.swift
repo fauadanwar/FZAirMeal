@@ -17,7 +17,7 @@ protocol OrderViewModelProtocol {
     func getOrderAt(indexPath: IndexPath) -> Order?
     func getPassengerMealAndOrderAt(indexPath: IndexPath) -> (Passenger?, Meal?, Order?)
     func getOrdersCount() -> Int
-    func cancelOrder(orderId: String) -> Bool
+    func cancelOrder(order: Order) -> Bool
 }
 
 class OrderViewModel: OrderViewModelProtocol
@@ -53,9 +53,16 @@ class OrderViewModel: OrderViewModelProtocol
         }        
     }
     
-    func cancelOrder(orderId: String) -> Bool {
-        guard let order = orderDataManager.getOrderWith(orderid: orderId) else { return false }
-        return orderDataManager.deleteAndSendOrderToPeers(order: order)
+    func cancelOrder(order: Order) -> Bool {
+        switch ConnectivityData.shared.pairingRole {
+        case .host:
+            return orderDataManager.deleteAndSendOrderToPeers(order: order)
+        case .peer:
+            guard let selectedHost = ConnectivityData.shared.selectedHost else { return false }
+            return orderDataManager.sendOrderDeleteRequestToHost(order: order, toHost: selectedHost)
+        case .unknown:
+            return false
+        }
     }
 }
 
