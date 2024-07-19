@@ -3,6 +3,16 @@ FZAirMeal application is POC for meal ordering by using Apple's Multi-peer conne
 Details documentation of case study: https://docs.google.com/document/d/1ZbVjy8rZb3_XCzA05dnZeMYzEHVSffeRITkenvKjK4c/edit?usp=sharing
 
 <br><br>
+# Technologies Used:
+- MVVM based architecture.
+- SOLID principles with Protocol oriented programming and Dependency injection.
+- Provider and repository, singleton and delegation design patterns.
+- Multipeer connectivity framework used to enstablish connection between Host and perr devices.
+- CoreData framework used to store data.
+- Swift programming language with combine framework and UIKit.
+- Used layer architecture to separate Presentation layer from Buisness layer.
+
+<br><br>
 ## Connecting Host and Peers
 https://github.com/user-attachments/assets/2389f8bc-c75f-4e9f-9e53-987da1be4398
 
