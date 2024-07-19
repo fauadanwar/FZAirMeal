@@ -20,3 +20,15 @@ https://github.com/user-attachments/assets/46f788f7-1f38-4be8-9dba-4bfd7d32b64b
 ## Sending Order from Peer device to Host and other Peers
 https://github.com/user-attachments/assets/b048e24d-5b96-4cb7-8ded-5be9c50ec8e7
 
+<br><br>
+## Fetch exsisting order from Host
+https://github.com/user-attachments/assets/2034fe7b-afea-458d-8467-35fe7d19657f
+
+<br><br>
+## Change Admin device.
+https://github.com/user-attachments/assets/31369dee-b87f-4c3b-841b-97c22e401079
+
+<br><br>
+## Cancel order.
+https://github.com/user-attachments/assets/e17dd8ed-9b48-455d-8381-70a490b4ed6b
+
