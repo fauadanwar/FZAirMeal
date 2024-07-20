@@ -22,14 +22,11 @@ For detailed documentation, refer to the [case study](https://docs.google.com/do
   
 https://github.com/user-attachments/assets/909a6c91-e313-4265-b5fa-86ef792e792d
 
-
-
 <br><br>
 ## Fetching Data
-- Host fetches data from an API (Currently retrieves data from a JSON file in case of API failure).
-- Peers fetch data from the Host using the local network.
+- The host attempts to fetch passenger and meal data from a remote server using APIs. If the API call fails, the host retrieves the data from local JSON files as a fallback. Once obtained, peers can access this data directly from the host over the local network.
   
-https://github.com/user-attachments/assets/9bca2384-ccba-4c54-89a7-d5a0322c7616
+https://github.com/user-attachments/assets/b41617db-3e5d-4061-b59c-4baa866c31c0
 
 <br><br>
 ## Sending Order from Host device to Peers
