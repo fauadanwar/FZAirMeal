@@ -36,7 +36,9 @@ https://github.com/user-attachments/assets/a6346086-069e-428d-ad6e-3be1ff504a70
 
 <br><br>
 ## Sending Order from Peer device to Host and other Peers
-https://github.com/user-attachments/assets/b048e24d-5b96-4cb7-8ded-5be9c50ec8e7
+- Orders placed on a peer device are transmitted to the host. The host updates its database and subsequently broadcasts these changes to all connected peers. Each peer then updates its local database to reflect the new order information.
+
+https://github.com/user-attachments/assets/431efc5b-9b7f-4c72-9684-5a770917cada
 
 <br><br>
 ## Fetch exsisting order from Host
