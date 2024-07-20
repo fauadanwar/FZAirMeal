@@ -48,7 +48,9 @@ https://github.com/user-attachments/assets/e2cfe5dd-227f-42e4-a81e-c03fe4beb393
 
 <br><br>
 ## Change Admin device.
-https://github.com/user-attachments/assets/31369dee-b87f-4c3b-841b-97c22e401079
+- If the host becomes disconnected or stops its service, an existing host can change its role to become the new host. Other peers or newly joining devices can connect to this new host, allowing the ordering process to continue uninterrupted.
+  
+https://github.com/user-attachments/assets/5adcf970-046a-4861-8388-13636c1c3a53
 
 <br><br>
 ## Cancel order.
