@@ -18,7 +18,9 @@ For detailed documentation, refer to the [case study](https://docs.google.com/do
 # Key Functionalities
 <br><br>
 ## Connecting Host and Peers
-https://github.com/user-attachments/assets/2389f8bc-c75f-4e9f-9e53-987da1be4398
+https://github.com/user-attachments/assets/909a6c91-e313-4265-b5fa-86ef792e792d
+
+
 
 <br><br>
 ## Fetching Data
