@@ -18,6 +18,8 @@ For detailed documentation, refer to the [case study](https://docs.google.com/do
 # Key Functionalities
 <br><br>
 ## Connecting Host and Peers
+- You can designate any device as a host and the others as peers. Start and stop the sharing service on any device. Once started, the host will listen for incoming connections while peers search for available hosts. When a peer finds a host, it can request a connection, which the host can accept or deny. This establishes a real-time connection between the two devices.
+  
 https://github.com/user-attachments/assets/909a6c91-e313-4265-b5fa-86ef792e792d
 
 
