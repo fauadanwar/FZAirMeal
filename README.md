@@ -54,20 +54,24 @@ https://github.com/user-attachments/assets/5adcf970-046a-4861-8388-13636c1c3a53
 
 <br><br>
 ## Cancel order.
-https://github.com/user-attachments/assets/e17dd8ed-9b48-455d-8381-70a490b4ed6b
+- Both peers and the host can cancel an order at any time. This action is broadcast to all connected devices, resulting in the order's removal from passenger records and an adjustment of item quantities accordingly.
+
+https://github.com/user-attachments/assets/10674b89-1647-4e46-af67-7a9d142e50eb
 
 <br><br>
-## Future implementations
-- Error handling:
-  - Currently, all error messages are logged in the console.
-  - Error messages should be shown to users as alerts.
-  - Errors should also be logged locally using a file or database.
-  - Peers will share logs with the host, and the host will upload logs to the server.
-- Order options:
-  - Users should be able to add more than one meal per passenger in an order.
-  - Orders should be stored locally in case of connection issues and synced later after reconnecting.
-- Online support:
-  - Add an option to configure the server URL so the host can fetch data from an online server.
-  - Add support for logs/error message uploads.
+## Future Enhancements
+- Error Handling
+  - Implement a robust error logging and reporting system, capturing detailed error messages and stack traces.
+  - Provide informative user alerts for critical errors, while logging all errors for analysis.
+  - Utilize local file or database storage for persistent error logging.
+  - Facilitate centralized error management by enabling peer-to-host and host-to-server log sharing.
+- Order Management
+  - Expand order functionality to accommodate multiple meal selections per passenger.
+  - Implement local order storage for offline order placement and synchronization upon reconnection.
+- System Integration
+  - Configure the system to retrieve data from an external server through a customizable URL.
+  - Integrate log and error data upload capabilities for centralized monitoring and analysis.
+    
+Note: These enhancements aim to improve system reliability, user experience, and data management.
 
  
