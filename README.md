@@ -42,7 +42,9 @@ https://github.com/user-attachments/assets/431efc5b-9b7f-4c72-9684-5a770917cada
 
 <br><br>
 ## Fetch exsisting order from Host
-https://github.com/user-attachments/assets/2034fe7b-afea-458d-8467-35fe7d19657f
+- If existing orders have been placed, a newly joined peer can retrieve this order information from the host device to align its order list with the current booking status.
+ 
+https://github.com/user-attachments/assets/e2cfe5dd-227f-42e4-a81e-c03fe4beb393
 
 <br><br>
 ## Change Admin device.
