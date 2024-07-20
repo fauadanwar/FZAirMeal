@@ -30,7 +30,9 @@ https://github.com/user-attachments/assets/b41617db-3e5d-4061-b59c-4baa866c31c0
 
 <br><br>
 ## Sending Order from Host device to Peers
-https://github.com/user-attachments/assets/46f788f7-1f38-4be8-9dba-4bfd7d32b64b
+- When an order is placed on the host device, order details are instantly transmitted to all connected peers. Peers display this updated order information on their order list. The available meal quantity is dynamically adjusted on all devices to reflect the number of meals ordered.
+
+https://github.com/user-attachments/assets/a6346086-069e-428d-ad6e-3be1ff504a70
 
 <br><br>
 ## Sending Order from Peer device to Host and other Peers
