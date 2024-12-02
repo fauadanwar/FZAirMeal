@@ -14,7 +14,7 @@ protocol PairingViewModelProtocol {
     func fetchData(ofType type: SendDataType)
 }
 
-class PairingViewModel: NSObject, ObservableObject, PairingViewModelProtocol
+class PairingViewModel: NSObject, PairingViewModelProtocol
 {
     private var mealManager: MealDataManagerProtocol
     private var passengerManager: PassengerDataManagerProtocol
